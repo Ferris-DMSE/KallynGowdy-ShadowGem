@@ -22,17 +22,21 @@
 		 * The world that simulates the physics for the game.
 		 */
 		private var world: b2World;		
+		
+		private var level: Level;
 
 		public function StatePlaying() {
 		}
 
 		public override function setup(game: GameManager): void {
 			super.setup(game);
-			world = new b2World(new b2Vec2(0, 10), true);
+			level = new Level1();
+			addChild(level);
+			level.setup();
 		}
 
 		protected override function updateCore(e: UpdateEvent): void {
-			world.Step(e.deltaTime, 10, 10);			
+			level.update(e);
 		}
 	}
 

@@ -42,14 +42,30 @@
 		 * @param world:b2World      The world that the object should exist in.
 		 * @param bodyDef:b2BodyDef  The body definition that should be used to create the physics body.
 		 */
-		public function PhysicsObject(world: b2World, bodyDef: b2BodyDef) {
+		public function PhysicsObject(bodyDef: b2BodyDef) {
 			this.bodyDef = bodyDef;
-			this.world = world;
 		}
 
-		public override function setup(): void {
-			super.setup();
+		/**
+		 * Sets up the physics needed for this object.
+		 * In the lifetime of the object, setupPhysics is called after setup().
+		 * @param world:b2World The world that this object should be setup in.
+		 */
+		public function setupPhysics(world: b2World): void {
+			this.world = world;
 			physicsBody = world.CreateBody(bodyDef);
+		}
+		
+		/**
+		 * Retrieves a default body definition that can be used for the object.
+		 * Essentially returns an identity body def, but with position and angle updated.
+		 * @return b2BodyDef The Default Body Definition.
+		 */
+		protected function getDefaultBodyDef(): b2BodyDef {
+			var bodyDef: b2BodyDef = new b2BodyDef();
+			bodyDef.position = new b2Vec2(x * PIXELS_TO_METERS, y * PIXELS_TO_METERS);
+			bodyDef.angle = rotation * Math.PI / 180;
+			return bodyDef;
 		}
 		
 		public override function update(e: UpdateEvent): void {
@@ -77,7 +93,7 @@
 		
 		public override function dispose(): void {
 			super.dispose();
-			this.world.DestroyBody(physicsBody);
+			world.DestroyBody(physicsBody);
 		}
 	}
 	
