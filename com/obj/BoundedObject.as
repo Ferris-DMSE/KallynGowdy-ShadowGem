@@ -1,0 +1,118 @@
+﻿package com.kg.obj {
+
+	import flash.display.MovieClip;
+	import flash.geom.Point;
+	import com.kg.state.IUpdatable;
+	import com.kg.state.UpdateEvent;
+
+	/**
+	 * Defines a class for an object that is "bound" to the limits of the screen.
+	 * When the object escapes the limits, it is marked as dead.
+	 */
+	public class BoundedObject extends MovieClip implements IUpdatable {
+
+		/**
+		 * The extra amount of padding to give the object off of the screen before it is marked as dead.
+		 */
+		public static const PADDING: Number = 15;
+
+		/**
+		 * The minimum X position that the object is allowed to reach before being marked as dead.
+		 */
+		protected var xMin: Number;
+
+		/**
+		 * The maximum X position that the object is allowed to reach before being marked as dead.
+		 */
+		protected var xMax: Number;
+
+		/**
+		 * The maximum Y position that the object is allowed to reach before being marked as dead.
+		 */
+		protected var yMax: Number;
+
+		/**
+		 * The minimum Y position that the object is allowed to occupy before being marked as dead.
+		 */
+		protected var yMin: Number;
+
+		/**
+		 * Whether the object should be considered "dead".
+		 * That is, out of bounds and no longer useful.
+		 */
+		public var isDead: Boolean = false;
+
+		/**
+		 * The collider that is used to check for collisions with this object.
+		 */
+		public var collider: ICollider = null;
+
+		/**
+		 * Creates a new Bounded Object.
+		 */
+		public function BoundedObject() {
+		}
+
+		/**
+		 * Configures the default X and Y minimum values.
+		 */
+		public function setup() : void {
+			xMin = -((width / 2) + PADDING);
+			yMax = stage.stageHeight + (height / 2) + PADDING;
+			xMax = stage.stageWidth + (width / 2) + PADDING;
+			yMin = -(height / 2 + PADDING);
+		}
+
+		/**
+		 * Checks this object's position against the boundaries.
+		 */
+		public function update(e: UpdateEvent): void {
+			var absolutePosition = this.localToGlobal(new Point());
+			checkBoundaries(absolutePosition);
+		}
+
+		/**
+		 * Checks the position of the object against the configured boundaries.
+		 * @param absolutePosition:Point The current absolute position that the object is at.
+		 */
+		protected function checkBoundaries(absolutePosition: Point): void {
+			var X = absolutePosition.x;
+			var Y = absolutePosition.y;
+			if(X < xMin || Y > yMax || X > xMax || Y < yMin) {
+				isDead = true;
+			}
+		}
+
+		/**
+		 * Finds the first collision between this object and the given array of objects. Returns the object that
+		 * this object intersects with. If no collision is found, then null is returned.
+		 * @param colliders:Array An array of BoundedObject objects that a collision should be found in.
+		 * @return BoundedObject Returns the object from the given array that collides with this object.
+		 */
+		public function findCollision(colliders: Array): BoundedObject {
+			for(var i = 0; i < colliders.length; i++) {
+				var c: BoundedObject = colliders[i];
+				if(collidesWith(c)) {
+					return c;
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * Determines if this object collides with the given other object.
+		 * @param other:BoundedObject The other collider to check for collision with.
+		 * @return Boolean Whether this object collides with the given other object.
+		 */
+		public function collidesWith(other: BoundedObject): Boolean {
+			return collider.collidesWith(other.collider);
+		}
+
+		/**
+		 * Releases all unmanaged resources from this object.
+		 */
+		public function dispose(): void {
+		}
+	}
+
+}
