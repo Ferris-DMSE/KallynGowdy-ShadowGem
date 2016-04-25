@@ -1,7 +1,9 @@
-package com.kg.obj {
+﻿package com.kg.obj {
 
   import flash.geom.Point;
+  import flash.display.DisplayObject;
   import com.kg.state.UpdateEvent;
+  import flash.display.MovieClip;
 
 	/**
 	 * Defines a class that represents an object that represents a camera system.
@@ -39,16 +41,23 @@ package com.kg.obj {
     private var actualPos: Point;
 
     /**
+     * The acceleration that the camera has in pixels per second.
+     * @default 20
+     */
+    public var acceleration: Number = 20;
+
+    /**
      * Creates a new camera that lives at the given offset.
      * @param offset:Point The position that this camera should start at.
      */
 		public function Camera(offset: Point) {
-      this.offset = offset.copy();
+      this.offset = offset.clone();
       this.canvas = new MovieClip();
-      actualPos = new Point();
+      actualPos = new Point(0, 0);
+      addChild(canvas);
 		}
 
-    protected override function findNewVelocity(): Point {
+    protected override function findNewVelocity(e: UpdateEvent): Point {
       if(target != null) {
         var targetPos = new Point(-target.x, -target.y);
         // find the direction that the camera should move in and normalize it.
@@ -56,7 +65,7 @@ package com.kg.obj {
         var magnitude: Number = Math.sqrt(targetDir.x * targetDir.x + targetDir.y * targetDir.y);
         targetDir = new Point(targetDir.x / magnitude, targetDir.y / magnitude);
 
-        return new Point(targetDir.x * 20, targetDir.y * 20);
+        return new Point(targetDir.x * acceleration, targetDir.y * acceleration);
       }
       return new Point(0, 0);
     }
@@ -76,6 +85,22 @@ package com.kg.obj {
      */
     public function addContent(obj: DisplayObject): void {
       canvas.addChild(obj);
+    }
+
+    /**
+     * Removes the given object from this camera's display tree.
+     * @param obj:DisplayObject The object that should be removed from the camera's display.
+     */
+    public function removeContent(obj: DisplayObject): void {
+      canvas.removeChild(obj);
+    }
+
+    /**
+     * Sets the target that this camera should track.
+     * @param target:BoundedObject The object that should be followed by the camera.
+     */
+    public function setTarget(target: BoundedObject): void {
+      this.target = target;
     }
 
 	}
