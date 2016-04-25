@@ -76,7 +76,7 @@
 		 * Updates the dot's position based on the velocity.
 		 * @param e:UpdateEvent The current frame update event.
 		 */
-		private function updatePosition(e: UpdateEvent): void {
+		protected function updatePosition(e: UpdateEvent): void {
 			velocity = findNewVelocity(e);
 			y += velocity.y * e.deltaTime;
 			x += velocity.x * e.deltaTime;
