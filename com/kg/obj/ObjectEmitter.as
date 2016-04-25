@@ -140,10 +140,18 @@
 				if(o == obj) {
 					obj.dispose();
 					objects.splice(i, 1);
-					removeChild(obj);
+					removeObjectFromDisplay(obj);
 					break;
 				}
 			}
+		}
+
+		/**
+		 * Removes the given object from the display tree.
+		 * @param obj:BoundedObject The object that should be removed from the display tree.
+		 */
+		protected function removeObjectFromDisplay(obj: BoundedObject): void {
+			removeChild(obj);
 		}
 
 		/**
