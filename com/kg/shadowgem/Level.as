@@ -62,6 +62,7 @@
 			objects = [];
 			setupCamera();
 			setupObjects();
+			camera.setTarget(player);
 			gravity = new GravityAffector();
 		}
 
@@ -84,7 +85,7 @@
 		 * Sets up the camera for the level.
 		 */
 		protected function setupCamera(): void {
-			camera = new Camera(new Point(250, 250));
+			camera = new Camera(new Point(480, 270));
 			addChild(camera);
 		}
 
@@ -139,7 +140,6 @@
 				gem.update(e);
 			}
 			player.update(e);
-			gravity.affectObjects(e, crates);
 			gravity.affectObject(e, player);
 			checkLevelCollisions(e);
 		}
@@ -149,9 +149,6 @@
 		 * @param e:UpdateEvent The current frame update event.
 		 */
 		public function checkLevelCollisions(e: UpdateEvent): void {
-	  	for each(var obj: MovingObject in crates) {
-				checkCollision(obj, floors);
-			}
 			checkPlayerCollisions(e);
 		}
 
@@ -205,11 +202,13 @@
 		protected function applyPlayerCollision(dir: Point, player: Player, second: BoundedObject): void {
 				if(second is Gem) {
 					applyPlayerGemCollision(dir, player, Gem(second));
+				} else if(second is Crate) {
+					applyPlayerCrateCollision(dir, player, Crate(second));
 				} else if(player.velocity.y >= 0 || dir.y > 0) {
 					applyNormalCollision(dir, player, second);
-					if(dir.y < 0) {
-						player.isGrounded = true;
-					}
+				}
+				if(dir.y < 0) {
+					player.isGrounded = true;
 				}
 		}
 
@@ -221,6 +220,19 @@
 		 */
 		protected function applyPlayerGemCollision(dir: Point, player: Player, gem: Gem): void {
 			// TODO: pickup gem
+		}
+
+		/**
+		 * Applies the affects of a collision between a player and a crate.
+		 * @param dir:Point The direction that the player needs to move in to fix the overlap.
+		 * @param player:Player The player that is colliding with the crate.
+		 * @param crate:Crate The crate that the player is colliding with.
+		 */
+		protected function applyPlayerCrateCollision(dir: Point, player: Player, crate: Crate): void {
+			// only apply the collision if the player is landing on the crate.
+			if(dir.y < 0 && player.velocity.y > 0) {
+				applyNormalCollision(dir, player, crate);
+			}
 		}
 
 		/**

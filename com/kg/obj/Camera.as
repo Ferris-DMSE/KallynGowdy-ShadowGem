@@ -42,9 +42,15 @@
 
     /**
      * The acceleration that the camera has in pixels per second.
-     * @default 20
+     * @default 200
      */
-    public var acceleration: Number = 20;
+    public var acceleration: Number = 200;
+
+    /**
+     * The number of pixels that the player is allowed to move from the center of the camera offset.
+     * @default 10;
+     */
+    public var padding: Number = 10;
 
     /**
      * Creates a new camera that lives at the given offset.
@@ -59,13 +65,18 @@
 
     protected override function findNewVelocity(e: UpdateEvent): Point {
       if(target != null) {
-        var targetPos = new Point(-target.x, -target.y);
+        var targetPos = new Point(-target.x + offset.x, -target.y + offset.y);
         // find the direction that the camera should move in and normalize it.
         var targetDir = new Point(targetPos.x - actualPos.x, targetPos.y - actualPos.y);
         var magnitude: Number = Math.sqrt(targetDir.x * targetDir.x + targetDir.y * targetDir.y);
-        targetDir = new Point(targetDir.x / magnitude, targetDir.y / magnitude);
 
-        return new Point(targetDir.x * acceleration, targetDir.y * acceleration);
+        if(magnitude > padding) {
+          targetDir = new Point(targetDir.x / magnitude, targetDir.y / magnitude);
+
+          return new Point(targetDir.x * acceleration, targetDir.y * acceleration);
+        } else {
+          return new Point(targetDir.x / 1.2, targetDir.y / 1.2);
+        }
       }
       return new Point(0, 0);
     }
