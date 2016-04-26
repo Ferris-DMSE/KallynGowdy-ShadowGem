@@ -40,5 +40,13 @@ package com.kg.obj {
 		 * @return Number
 		 */
 		function getBottom(): Number;
+
+    /**
+     * Gets the vector that represents the direction that this collider will have to move
+     * in in order to not overlap with the given other collider.
+     * @param other:ICollider The other collider to fix the overlap with.
+     * @return Point The direction that this collider should move in.
+     */
+    function getOverlapFix(other: ICollider): Point;
 	}
 }

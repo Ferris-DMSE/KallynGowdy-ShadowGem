@@ -135,6 +135,32 @@ package com.kg.obj {
 			}
 			return false;
 		}
+
+		public function getOverlapFix(other: ICollider): Point {
+			var rect: RectangleCollider = RectangleCollider(other);
+			var solution:Point = new Point(0,0);
+
+			// find smaller abs value on horizontal
+			var moveLeft: Number = this.left - rect.right;
+			var moveRight: Number = this.right - rect.left;
+
+			var moveX: Number = Math.abs(moveLeft) < Math.abs(moveRight) ? moveLeft : moveRight;
+
+			// find smaller abs value on vertical
+			var moveDown: Number = this.bottom - rect.top;
+			var moveUp: Number = this.top - rect.bottom;
+
+			var moveY: Number = Math.abs(moveUp) < Math.abs(moveDown) ? moveUp : moveDown;
+
+			// find smaller between the two
+			if(Math.abs(moveY) < Math.abs(moveX)) {
+				solution.y = moveY;
+			} else {
+				solution.x = moveX;
+			}
+
+			return solution;
+		}
 	}
 
 }

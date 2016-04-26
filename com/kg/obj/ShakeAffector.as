@@ -27,14 +27,17 @@ package com.kg.obj {
 		public function ShakeAffector() {
 		}
 
-		public override function affectObject(e: UpdateEvent, obj: MovingObject): void {
-			if(duration > 0) {
-				obj.y = Math.cos(obj.x * frequency) * e.deltaTime * strength;
-        obj.x = Math.cos(obj.y * frequency) * e.deltaTime * strength;
-			} else {
-        obj.y = 0;
-        obj.x = 0;
-      }
+		public override function affectObject(e: UpdateEvent, obj: BoundedObject): void {
+			var moving: MovingObject = obj as MovingObject;
+			if(moving != null) {
+				if(duration > 0) {
+					obj.y = Math.cos(obj.x * frequency) * e.deltaTime * strength;
+        	obj.x = Math.cos(obj.y * frequency) * e.deltaTime * strength;
+				} else {
+        	obj.y = 0;
+        	obj.x = 0;
+      	}
+			}
 		}
 
     public override function update(e: UpdateEvent): void {

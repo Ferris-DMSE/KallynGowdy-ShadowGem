@@ -21,9 +21,12 @@ package com.kg.obj {
 		public function GravityAffector() {
 		}
 
-		public override function affectObject(e: UpdateEvent, obj: MovingObject): void {
-			if(obj.velocity != null) {
-				obj.velocity.y += gravity * e.deltaTime;
+		public override function affectObject(e: UpdateEvent, obj: BoundedObject): void {
+			var moving: MovingObject = obj as MovingObject;
+			if(moving != null) {
+				if(moving.velocity != null) {
+					moving.velocity.y += gravity * e.deltaTime;
+				}
 			}
 		}
 	}

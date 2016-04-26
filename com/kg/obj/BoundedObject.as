@@ -90,10 +90,12 @@
 		 * @return BoundedObject Returns the object from the given array that collides with this object.
 		 */
 		public function findCollision(colliders: Array): BoundedObject {
-			for(var i = 0; i < colliders.length; i++) {
-				var c: BoundedObject = colliders[i];
-				if(collidesWith(c)) {
-					return c;
+			if(collider != null) {
+				for(var i = 0; i < colliders.length; i++) {
+					var c: BoundedObject = colliders[i];
+					if(collidesWith(c)) {
+						return c;
+					}
 				}
 			}
 			return null;
@@ -105,7 +107,17 @@
 		 * @return Boolean Whether this object collides with the given other object.
 		 */
 		public function collidesWith(other: BoundedObject): Boolean {
-			return collider.collidesWith(other.collider);
+				return collider != null && other.collider != null && other != this && collider.collidesWith(other.collider);
+		}
+
+		/**
+		 * Finds the vector that represents the distance this object needs to move in order to fix the overlap with
+		 * the given other object.
+		 * @param other:BoundedObject The other object that the overlap fix should be calculated for.
+		 * @return Point The direction that this object needs to move in in order to fix the overlap.
+		 */
+		public function getOverlapFix(other: BoundedObject): Point {
+			return collider.getOverlapFix(other.collider);
 		}
 
 		/**
