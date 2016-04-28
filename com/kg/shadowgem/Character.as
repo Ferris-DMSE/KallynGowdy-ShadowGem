@@ -38,10 +38,9 @@ package com.kg.shadowgem {
      * Expressed as the factor of slowdown per frame.
      * @default 1.05
      */
-    public var dynamicFriction: Number;
+    public var dynamicFriction: Number = 1.05;
 
 		public function Character() {
-			// constructor code
 		}
 
 		public override function setup(): void {
@@ -50,13 +49,56 @@ package com.kg.shadowgem {
 		}
 
     protected override function findNewVelocity(e: UpdateEvent): Point {
+      if(shouldMoveRight(e)) {
+				velocity.x += acceleration * e.deltaTime;
+			}
+			else if(shouldMoveLeft(e)) {
+				velocity.x -= acceleration * e.deltaTime;
+			} else {
+				// static friction
+				velocity.x /= staticFriction;
+			}
 
+			if(shouldJump(e)) {
+				jump();
+			}
+
+			// rolling/dynamic friction
+			velocity.x /= dynamicFriction;
+			return velocity;
+    }
+
+    /**
+     * Determines whether the character should move left during the frame.
+     * @param e:UpdateEvent The current frame update event.
+     * @return Boolean Whether the character should move left.
+     */
+    protected function shouldMoveLeft(e: UpdateEvent): Boolean {
+      return false;
+    }
+
+    /**
+     * Determines whether the character should move right during the frame.
+     * @param e:UpdateEvent The current frame update event.
+     * @return Boolean Whether the character should move right.
+     */
+    protected function shouldMoveRight(e: UpdateEvent): Boolean {
+      return false;
+    }
+
+    /**
+     * Determines whether the character should begin jumping during the frame.
+     * @param e:UpdateEvent The current frame update event.
+     * @param Boolean Whether the character should jump.
+     */
+    protected function shouldJump(e: UpdateEvent): Boolean {
+      return false;
     }
 
     /**
      * Finds the acceleration that should be applied to the character for the frame.
      * @param e:UpdateEvent The current frame update event.
-     * @return Point The Point that represents the acceleration that should be applied 
+     * @return Point The Point that represents the acceleration that should be applied
      */
     protected function findAcceleration(e: UpdateEvent): Point {
         return new Point(0, 0);
@@ -66,6 +108,9 @@ package com.kg.shadowgem {
 			return new Point(x - width / 2, y - 37.6 / 2);
 		}
 
+    /**
+     * Makes the character jump.
+     */
     public function jump(): void {
       if(isGrounded) {
 				velocity.y -= jumpForce;

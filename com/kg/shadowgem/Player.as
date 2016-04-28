@@ -19,25 +19,17 @@
 			return new Point(x - width / 2, y - 37.6 / 2);
 		}
 
-		protected override function findNewVelocity(e: UpdateEvent): Point {
-			if(e.keys.isDown(Keyboard.RIGHT)) {
-				velocity.x += acceleration * e.deltaTime;
-			}
-			else if(e.keys.isDown(Keyboard.LEFT)) {
-				velocity.x -= acceleration * e.deltaTime;
-			} else {
-				// static friction
-				velocity.x /= 1.25;
-			}
+		protected override function shouldMoveLeft(e: UpdateEvent): Boolean {
+      return e.keys.isDown(Keyboard.LEFT);
+    }
 
-			if(e.keys.onDown(Keyboard.SPACE)) {
-				jump();
-			}
+    protected override function shouldMoveRight(e: UpdateEvent): Boolean {
+      return e.keys.isDown(Keyboard.RIGHT);
+    }
 
-			// rolling/dynamic friction
-			velocity.x /= 1.05;
-			return velocity;
-		}
+    protected override function shouldJump(e: UpdateEvent): Boolean {
+      return e.keys.onDown(Keyboard.SPACE);
+    }
 
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
