@@ -5,6 +5,7 @@ package com.kg.shadowgem {
 	import flash.geom.Point;
 	import com.kg.state.UpdateEvent;
 	import flash.ui.Keyboard;
+	import flash.geom.ColorTransform;
 
 	/**
 	 * Defines a class that represents a character.
@@ -40,11 +41,29 @@ package com.kg.shadowgem {
      */
     public var dynamicFriction: Number = 1.05;
 
+		/**
+		 * The amount of health that this character has.
+		 * @default 3
+		 */
+		public var health: int = 3;
+
+		/**
+		 * The amount of time in seconds that this character is immune to damage after being hit.
+		 * @default 3
+		 */
+		public var damageShieldLength: Number = 3;
+
+		/**
+		 * The amount of time left on the character's damage shield.
+		 */
+		private var damageShieldLeft: Number;
+
 		public function Character() {
 		}
 
 		public override function setup(): void {
 			super.setup();
+			damageShieldLeft = -1;
 			velocity = new Point(0, 0);
 		}
 
@@ -117,8 +136,41 @@ package com.kg.shadowgem {
 			}
     }
 
+		/**
+		 * Damages the player and returns whether the player was damaged.
+		 * @param amount:int The amount of damage that is applied to the character's health.
+		 * @return Boolean Whether the player was damaged.
+		 */
+		public function hurt(amount: int): Boolean {
+			if(damageShieldLeft <= 0) {
+				damageShieldLeft = damageShieldLength;
+				health -= amount;
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Determines whether the player's health has run out.
+		 * @return Boolean Whether the player's health is out.
+		 */
+		private function hasNoHealth(): Boolean {
+			return health <= 0;
+		}
+
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
+			damageShieldLeft -= e.deltaTime;
+			isDead = hasNoHealth();
+			flashDamage();
+		}
+
+		protected function flashDamage(): void {
+			var trans: ColorTransform = new ColorTransform();
+			if(damageShieldLeft > 0 && Math.round(damageShieldLeft * 3 - 1) % 2 == 0) {
+				trans.color = 0xFFFFFF;
+			}
+			this.transform.colorTransform = trans;
 		}
 	}
 

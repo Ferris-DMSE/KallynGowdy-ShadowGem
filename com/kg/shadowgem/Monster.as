@@ -8,6 +8,12 @@ package com.kg.shadowgem {
 	 */
 	public class Monster extends Character {
 
+    /**
+     * The amount of damage that this monster applies when it touches the player.
+     * @default 1
+     */
+    public var damage: int = 1;
+
 		public function Monster() {
 		}
 

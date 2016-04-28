@@ -46,6 +46,13 @@
 				movingLeft = !movingLeft;
 				moveTimeLeft = moveTime;
 			}
+			if(velocity.x < 0) {
+				// moving left, reflect player scale
+				scaleX = 1;
+			} else {
+				// moving right, normal
+				scaleX = -1;
+			}
 		}
 	}
 

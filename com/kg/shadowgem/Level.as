@@ -276,7 +276,7 @@
 		 * @param monster:Monster The monster that the player is colliding with.
 		 */
 		protected function applyPlayerMonsterCollision(dir: Point, player: Player, monster: Monster): void {
-			trace("monster");
+			player.hurt(monster.damage);
 		}
 
 		/**
