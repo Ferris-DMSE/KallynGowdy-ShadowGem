@@ -53,6 +53,16 @@
     public var padding: Number = 10;
 
     /**
+     * The minimum X position that this camera can have.
+     */
+    public var minX: Number = 0;
+
+    /**
+     * The maximum Y position that this camera can have.
+     */
+    public var maxY: Number = 540;
+
+    /**
      * Creates a new camera that lives at the given offset.
      * @param offset:Point The position that this camera should start at.
      */
@@ -66,6 +76,12 @@
     protected override function findNewVelocity(e: UpdateEvent): Point {
       if(target != null) {
         var targetPos = new Point(-target.x + offset.x, -target.y + offset.y);
+        if(-(targetPos.y - offset.y * 2) > maxY) {
+          targetPos.y = -(maxY - offset.y * 2);
+        }
+        if(-targetPos.x < minX) {
+          targetPos.x = -minX;
+        }
         // find the direction that the camera should move in and normalize it.
         var targetDir = new Point(targetPos.x - actualPos.x, targetPos.y - actualPos.y);
         var magnitude: Number = Math.sqrt(targetDir.x * targetDir.x + targetDir.y * targetDir.y);

@@ -32,6 +32,11 @@
 		protected var floors: Array;
 
 		/**
+		 * All of the walls in the game.
+		 */
+		protected var walls: Array;
+
+		/**
 		 * All of the gems in the game.
 		 */
 		protected var gems: Array;
@@ -60,6 +65,7 @@
 			gems = [];
 			crates = [];
 			objects = [];
+			walls = [];
 			setupCamera();
 			setupObjects();
 			camera.setTarget(player);
@@ -87,6 +93,7 @@
 		protected function setupCamera(): void {
 			camera = new Camera(new Point(480, 270));
 			addChild(camera);
+			camera.setup();
 		}
 
 		/**
@@ -98,7 +105,11 @@
 			camera.addContent(obj);
 			obj.setup();
 			if(obj is MetalFloor) {
-				floors.push(obj);
+				if(Math.abs(obj.rotation) < 45) {
+					floors.push(obj);
+				} else {
+					walls.push(obj);
+				}
 			} else if(obj is Gem) {
 				gems.push(obj);
 			} else if(obj is Crate) {
@@ -130,18 +141,25 @@
 			for each(var obj in objects) {
 				obj.update(e);
 			}
-			for each(var floor in floors) {
-				floor.update(e);
-			}
-			for each(var crate in crates) {
-				crate.update(e);
-			}
-			for each(var gem in gems) {
-				gem.update(e);
-			}
+			updateArray(e, objects);
+			updateArray(e, floors);
+			updateArray(e, walls);
+			updateArray(e, crates);
+			updateArray(e, gems);
 			player.update(e);
 			gravity.affectObject(e, player);
 			checkLevelCollisions(e);
+		}
+
+		/**
+		 * Updates all of the objects in the given array.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param arr:Array The array of objects that should be updated.
+		 */
+		private function updateArray(e: UpdateEvent, arr: Array): void {
+			for each(var obj: BoundedObject in arr) {
+				obj.update(e);
+			}
 		}
 
 		/**
@@ -159,6 +177,7 @@
 		protected function checkPlayerCollisions(e: UpdateEvent): void {
 			var crate = checkCollision(player, crates);
 			var floor = checkCollision(player, floors);
+			var wall = checkCollision(player, walls);
 			if(crate == null && floor == null) {
 				player.isGrounded = false;
 			}
@@ -204,7 +223,7 @@
 					applyPlayerGemCollision(dir, player, Gem(second));
 				} else if(second is Crate) {
 					applyPlayerCrateCollision(dir, player, Crate(second));
-				} else if(player.velocity.y >= 0 || dir.y > 0) {
+				} else {
 					applyNormalCollision(dir, player, second);
 				}
 				if(dir.y < 0) {

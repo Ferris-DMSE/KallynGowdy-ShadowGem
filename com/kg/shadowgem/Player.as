@@ -12,7 +12,6 @@
 	public class Player extends Character {
 
 		public function Player() {
-			// constructor code
 		}
 
 		protected override function findColliderPosition(): Point {
@@ -20,11 +19,11 @@
 		}
 
 		protected override function shouldMoveLeft(e: UpdateEvent): Boolean {
-      return e.keys.isDown(Keyboard.LEFT);
+      return e.keys.isDown(Keyboard.LEFT) || e.keys.isDown(Keyboard.A);
     }
 
     protected override function shouldMoveRight(e: UpdateEvent): Boolean {
-      return e.keys.isDown(Keyboard.RIGHT);
+      return e.keys.isDown(Keyboard.RIGHT) || e.keys.isDown(Keyboard.D);
     }
 
     protected override function shouldJump(e: UpdateEvent): Boolean {
@@ -33,7 +32,6 @@
 
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
-
 			if(currentFrame <= 81 && Math.abs(velocity.x) < 1) {
 				gotoAndPlay("idle");
 			} else if(currentFrame > 82 && Math.abs(velocity.x) > 1) {
