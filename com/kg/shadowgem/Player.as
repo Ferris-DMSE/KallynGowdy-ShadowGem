@@ -37,6 +37,14 @@
 			} else if(currentFrame > 82 && Math.abs(velocity.x) > 1) {
 				gotoAndPlay("moving");
 			}
+
+			if(velocity.x < 0) {
+				// moving left, reflect player scale
+				scaleX = -1;
+			} else {
+				// moving right, normal
+				scaleX = 1;
+			}
 		}
 	}
 
