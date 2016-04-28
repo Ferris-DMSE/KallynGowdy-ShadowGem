@@ -238,7 +238,7 @@
 					applyPlayerMonsterCollision(dir, Player(character), Monster(second));
 				} else if(second is Crate) {
 					applyCharacterCrateCollision(dir, character, Crate(second));
-				} else {
+				} else if(character.velocity.y >= 0 || dir.y > 0 || Math.abs(dir.x) > 0) {
 					applyNormalCollision(dir, character, second);
 				}
 				if(dir.y < 0) {
