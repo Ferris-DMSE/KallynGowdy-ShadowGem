@@ -20,8 +20,8 @@ package com.kg.obj {
      * @param objects:Array The array of MovingObject entities that should be affected.
      */
     public function affectObjects(e: UpdateEvent, objects: Array): void {
-      for each(var obj: MovingObject in objects) {
-				if(obj != null) {
+      for each(var obj: BoundedObject in objects) {
+				if(obj != null && obj) {
 					var emitter: ObjectEmitter = obj as ObjectEmitter;
 					if(emitter != null) {
 						affectObjects(e, emitter.objects);
@@ -37,7 +37,7 @@ package com.kg.obj {
      * @param e:UpdateEvent The current frame update event.
      * @param obj:MovingObject The object that should be affected.
      */
-    public function affectObject(e: UpdateEvent, obj: MovingObject): void {
+    public function affectObject(e: UpdateEvent, obj: BoundedObject): void {
       trace("No Effects Were Applied");
     }
 

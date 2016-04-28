@@ -56,7 +56,7 @@
 		 * @return Number Returns the number of seconds between spawns.
 		 */
 		protected function findSpawnRate(): Number {
-			return 0.1;
+			return int.MAX_VALUE;
 		}
 
 		/**

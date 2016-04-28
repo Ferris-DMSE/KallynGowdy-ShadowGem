@@ -1,32 +1,32 @@
 ﻿package com.kg.shadowgem {
-	import com.kg.obj.BoundedObject;
+	import com.kg.obj.MovingObject;
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import flash.geom.Point;
 	import Box2D.Dynamics.b2BodyDef;
 	import Box2D.Dynamics.b2World;
 	import com.kg.state.UpdateEvent;
-	
+
 	/**
 	 * Defines a class that represents an object that uses Box2D physics to control its movement.
 	 */
-	public class PhysicsObject extends BoundedObject {
+	public class PhysicsObject extends MovingObject {
 
 		/**
 		 * The conversion rate from pixels to meters.
 		 */
 		public static const PIXELS_TO_METERS: Number = 1/50;
-		
+
 		/**
 		 * The convertion rate from meters to pixels.
 		 */
 		public static const METERS_TO_PIXELS: Number = 50;
-		
+
 		/**
 		 * Gets the body that the physics object should exist at.
 		 */
 		public var physicsBody: b2Body;
-		
+
 		/**
 		 * The body definition that should be used to setup the body.
 		 */
@@ -36,7 +36,7 @@
 		 * The world that the physics body belongs to.
 		 */
 		private var world: b2World;
-		
+
 		/**
 		 * Creates a new physics object.
 		 * @param world:b2World      The world that the object should exist in.
@@ -55,7 +55,7 @@
 			this.world = world;
 			physicsBody = world.CreateBody(bodyDef);
 		}
-		
+
 		/**
 		 * Retrieves a default body definition that can be used for the object.
 		 * Essentially returns an identity body def, but with position and angle updated.
@@ -67,34 +67,36 @@
 			bodyDef.angle = rotation * Math.PI / 180;
 			return bodyDef;
 		}
-		
-		public override function update(e: UpdateEvent): void {
-			super.update(e);
-			updatePosition();
-			updateRotation();
+
+		protected override function findNewVelocity(e: UpdateEvent): Point {
+			return null;
 		}
-		
+
 		/**
 		 * Updates the position of the display object.
 		 */
-		private function updatePosition(): void {
+		protected override function updatePosition(e: UpdateEvent): void {
+			velocity = findNewVelocity(e);
+			if(velocity) {
+				physicsBody.SetLinearVelocity(new b2Vec2(velocity.x * PIXELS_TO_METERS, velocity.y * PIXELS_TO_METERS));
+			}
 			var pos: b2Vec2 = physicsBody.GetPosition();
 			x = pos.x * METERS_TO_PIXELS;
 			y = pos.y * METERS_TO_PIXELS;
 		}
-		
+
 		/**
 		 * Updates the rotation of the display object.
 		 */
-		private function updateRotation(): void {
+		protected override function updateRotation(e: UpdateEvent): void {
 			var angle: Number = physicsBody.GetAngle();
-			rotation = angle * 180 / Math.PI;			
+			rotation = angle * 180 / Math.PI;
 		}
-		
+
 		public override function dispose(): void {
 			super.dispose();
 			world.DestroyBody(physicsBody);
 		}
 	}
-	
+
 }
