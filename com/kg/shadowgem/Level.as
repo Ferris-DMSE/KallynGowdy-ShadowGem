@@ -177,6 +177,14 @@
 		private function updateArray(e: UpdateEvent, arr: Array): void {
 			for each(var obj: BoundedObject in arr) {
 				obj.update(e);
+				if(obj.isDead) {
+					var i = arr.indexOf(obj);
+					if(i >= 0) {
+						arr.splice(i, 1);
+					}
+					obj.dispose();
+					removeObjectFromDisplay(obj);
+				}
 			}
 		}
 
@@ -189,6 +197,10 @@
 			checkCollision(e, player, monsters);
 			for each(var monster in monsters) {
 				checkCharacterCollisions(e, monster);
+				var bullet = player.findBulletCollisions(monster);
+				if(bullet != null) {
+					monster.hurt(1);
+				}
 			}
 			for each(var monsterAffector in monsterAffectors) {
 				checkCollision(e, monsterAffector, monsters);

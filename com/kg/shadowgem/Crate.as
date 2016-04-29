@@ -19,6 +19,7 @@
 
 		public override function setup(): void {
 			super.setup();
+			boundless();
 			velocity = new Point(0, 0);
 		}
 	}

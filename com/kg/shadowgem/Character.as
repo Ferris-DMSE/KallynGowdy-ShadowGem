@@ -76,6 +76,7 @@ package com.kg.shadowgem {
 
 		public override function setup(): void {
 			super.setup();
+			boundless();
 			damageShieldLeft = -1;
 			velocity = new Point(0, 0);
 			bullets = new SingleEmitter();
@@ -197,6 +198,7 @@ package com.kg.shadowgem {
 			if(damageShieldLeft <= 0) {
 				damageShieldLeft = damageShieldLength;
 				health -= amount;
+				isDead = isDead || hasNoHealth();
 				return true;
 			}
 			return false;

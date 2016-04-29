@@ -14,6 +14,11 @@
 			super();
 		}
 
+		public override function setup(): void {
+			super.setup();
+			boundless();
+		}
+
 		protected override function findColliderPosition(): Point {
 			return new Point(x - width / 2, y - height / 2);
 		}

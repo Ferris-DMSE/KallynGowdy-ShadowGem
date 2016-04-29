@@ -55,6 +55,10 @@
 		protected override function createBullet(): MovingObject {
 			return new Bullet(new Point(velocity.x, 0));
 		}
+
+		protected override function canShoot(e: UpdateEvent): Boolean {
+			return ShadowGemPlayerData(e.playerData).ammo > 0;
+		}
 	}
 
 }

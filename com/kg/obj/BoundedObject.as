@@ -57,10 +57,27 @@
 		 * Configures the default X and Y minimum values.
 		 */
 		public function setup() : void {
+			boundedToScreen();
+		}
+
+		/**
+		 * Updates the bounds of this object to match the screen.
+		 */
+		protected function boundedToScreen(): void {
 			xMin = -((width / 2) + PADDING);
 			yMax = stage.stageHeight + (height / 2) + PADDING;
 			xMax = stage.stageWidth + (width / 2) + PADDING;
 			yMin = -(height / 2 + PADDING);
+		}
+
+		/**
+		 * Updates the bounds of this object so that it will never be destroyed due to being out of bounds.
+		 */
+		protected function boundless(): void {
+      xMin = int.MIN_VALUE;
+      xMax = int.MAX_VALUE;
+      yMin = int.MIN_VALUE;
+      yMax = int.MAX_VALUE;
 		}
 
 		/**

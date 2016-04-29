@@ -18,6 +18,11 @@ package com.kg.shadowgem {
 		public function Monster() {
 		}
 
+		public override function setup(): void {
+			super.setup();
+			health = 1;
+		}
+
 		protected override function findNewVelocity(e: UpdateEvent): Point {
 			return velocity;
 		}
