@@ -265,7 +265,6 @@
 		 * @param gem:Gem The gem that the player is colliding with.
 		 */
 		protected function applyPlayerGemCollision(e: UpdateEvent, dir: Point, player: Player, gem: Gem): void {
-			// TODO: pickup gem
 			collectGem(e, gem);
 		}
 
