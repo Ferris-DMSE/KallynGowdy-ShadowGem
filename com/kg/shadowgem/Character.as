@@ -196,9 +196,12 @@ package com.kg.shadowgem {
 		 */
 		public function hurt(amount: int): Boolean {
 			if(damageShieldLeft <= 0) {
-				damageShieldLeft = damageShieldLength;
 				health -= amount;
-				isDead = isDead || hasNoHealth();
+				if(hasNoHealth()) {
+					explode();
+				} else {
+					damageShieldLeft = damageShieldLength;
+				}
 				return true;
 			}
 			return false;
@@ -215,7 +218,6 @@ package com.kg.shadowgem {
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
 			damageShieldLeft -= e.deltaTime;
-			isDead = hasNoHealth();
 			flashDamage();
 			if(shouldShoot(e)) {
 				shoot(e);

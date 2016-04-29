@@ -107,7 +107,7 @@
 		 */
 		public function explode(): void {
 			if(explosion == null) {
-				gotoAndStop(3);
+				gotoAndStop("dead");
 				explosion = createExplosion();
 				addChild(explosion);
 				explosion.setup();

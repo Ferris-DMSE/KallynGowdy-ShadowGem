@@ -3,6 +3,7 @@ package com.kg.shadowgem {
 	import flash.display.MovieClip;
   import com.kg.state.UpdateEvent;
 	import flash.geom.Point;
+	import com.kg.obj.Explosion;
 
   /**
 	 * Defines a class that represents a monster. Mostly used to identify monsters.
@@ -25,6 +26,12 @@ package com.kg.shadowgem {
 
 		protected override function findNewVelocity(e: UpdateEvent): Point {
 			return velocity;
+		}
+
+		protected override function createExplosion(): Explosion {
+			var e: Explosion = new BoneExplosion();
+			e.y = -10;
+			return e;
 		}
 
 	}

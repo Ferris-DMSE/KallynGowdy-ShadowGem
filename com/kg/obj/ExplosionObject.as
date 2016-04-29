@@ -10,14 +10,14 @@
 	public class ExplosionObject extends MovingObject {
 
     /**
-		 * The amount of time that the object can live for.
+		 * The amount of time, in seconds, that the object has left.
 		 */
 		public var lifetime: Number;
 
 		/**
-		 * The time that the dot should be killed.
+		 * The amount of time, in seconds, that the object will live for.
 		 */
-		private var deathTime: Number = -1;
+		protected var startingLifetime: Number;
 
 		/**
 		 * Creates a new Explosion object with a random velocity.
@@ -26,7 +26,8 @@
 			var vX = Math.random() * 10 - 5;
 			var vY = Math.random() * 10 - 5;
 			velocity = new Point(vX, vY);
-			lifetime = Math.random() * 2 * 1000;
+			startingLifetime = Math.random() * 2;
+			lifetime = startingLifetime;
 		}
 
 		/**
@@ -35,11 +36,8 @@
 		 */
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
-			if(deathTime < 0) {
-				deathTime = e.currentTime + lifetime;
-			}
-
-			if(deathTime < e.currentTime) {
+			lifetime -= e.deltaTime;
+			if(lifetime < 0) {
 				isDead = true;
 			}
 		}

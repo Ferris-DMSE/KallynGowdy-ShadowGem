@@ -200,6 +200,7 @@
 				var bullet = player.findBulletCollisions(monster);
 				if(bullet != null) {
 					monster.hurt(1);
+					bullet.isDead = true;
 				}
 			}
 			for each(var monsterAffector in monsterAffectors) {
@@ -335,7 +336,9 @@
 		 * @param monster:Monster The monster that the player is colliding with.
 		 */
 		protected function applyPlayerMonsterCollision(e: UpdateEvent, dir: Point, player: Player, monster: Monster): void {
-			player.hurt(monster.damage);
+			if(monster.explosion == null) {
+				player.hurt(monster.damage);
+			}
 		}
 
 		/**
