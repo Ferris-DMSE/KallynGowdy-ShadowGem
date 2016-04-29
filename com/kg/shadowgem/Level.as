@@ -66,6 +66,11 @@
 		 */
 		protected var monsterAffectors: Array;
 
+		/**
+		 * The emitter that emits dirt particles from the player's feet.
+		 */
+		private var playerDirtEmitter: DirtEmitter;
+
 		public function Level() {
 		}
 
@@ -80,8 +85,17 @@
 			monsterAffectors = [];
 			setupCamera();
 			setupObjects();
+			setupDirtEmitter();
 			camera.setTarget(player);
 			gravity = new GravityAffector();
+		}
+
+		/**
+		 * Sets up the dirt emitter for the player.
+		 */
+		private function setupDirtEmitter(): void {
+			playerDirtEmitter = new DirtEmitter(player, new Point(0, player.height/2));
+			camera.addContent(playerDirtEmitter);
 		}
 
 		/**
@@ -165,7 +179,9 @@
 			updateArray(e, monsters);
 			updateArray(e, monsterAffectors);
 			player.update(e);
+			playerDirtEmitter.update(e);
 			gravity.affectObject(e, player);
+			gravity.affectObjects(e, [playerDirtEmitter]);
 			checkLevelCollisions(e);
 		}
 
@@ -206,6 +222,18 @@
 			for each(var monsterAffector in monsterAffectors) {
 				checkCollision(e, monsterAffector, monsters);
 			}
+		}
+
+		/**
+		 * Checks for collisions between the given object and other opaque objects in the level.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param obj:MovingObject The object to check against the level.
+		 */
+		protected function checkObjectCollisions(e: UpdateEvent, obj: MovingObject): void {
+			checkCollision(e, obj, crates);
+			checkCollision(e, obj, floors);
+			checkCollision(e, obj, walls);
+			checkCollision(e, obj, objects);
 		}
 
 		/**

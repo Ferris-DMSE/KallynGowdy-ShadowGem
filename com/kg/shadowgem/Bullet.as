@@ -18,7 +18,7 @@
 		/**
 		 * The speed that this bullet travels at.
 		 */
-		public var speed: Number = 100;
+		public var speed: Number = 200;
 
 		/**
 		 * The acceleration that the bullet experiences during it's lifetime.
@@ -39,7 +39,7 @@
 		public override function setup(): void {
 			super.setup();
 			velocity = new Point(direction.x * speed, direction.y * speed);
-			x += direction.x * width;
+			x += direction.x * 25;
 		}
 
 		protected override function findColliderPosition(): Point {

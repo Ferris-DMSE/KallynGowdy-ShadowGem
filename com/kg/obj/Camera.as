@@ -115,11 +115,27 @@
     }
 
     /**
+     * Adds the given object to this camera's display tree in a position that is unaffected by the camera's movement.
+     * @param obj:DisplayObject The object that should be added to the camera.
+     */
+    public function addStaticContent(obj: DisplayObject): void {
+      addChild(obj);
+    }
+
+    /**
      * Removes the given object from this camera's display tree.
      * @param obj:DisplayObject The object that should be removed from the camera's display.
      */
     public function removeContent(obj: DisplayObject): void {
       canvas.removeChild(obj);
+    }
+
+    /**
+     * Removes the given object from this camera's static display tree.
+     * @param obj:DisplayObject The object that should be removed from the camera's display.
+     */
+    public function removeStaticContent(obj: DisplayObject): void {
+      removeChild(obj);
     }
 
     /**
