@@ -30,6 +30,7 @@ package com.kg.shadowgem {
     public override function setup(): void {
       super.setup();
       velocity = new Point(0, 0);
+			boundless();
       alpha = 0;
       affectedMonsters = [];
       previousMonsters = [];
