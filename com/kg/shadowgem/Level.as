@@ -240,9 +240,11 @@
 		 * @param second:BoundedObject The object that the player is colliding with.
 		 */
 		protected function applyCharacterCollision(e: UpdateEvent, dir: Point, character: Character, second: BoundedObject): void {
-				if(character is Player && second is Gem) {
-					applyPlayerGemCollision(e, dir, Player(character), Gem(second));
-				} else if(character is Player && second is Monster) {
+				if(second is Gem) {
+					if(character is Player) {
+						applyPlayerGemCollision(e, dir, Player(character), Gem(second));
+					}
+			  } else if(character is Player && second is Monster) {
 					applyPlayerMonsterCollision(e, dir, Player(character), Monster(second));
 				} else if(second is Crate) {
 					applyCharacterCrateCollision(e, dir, character, Crate(second));
@@ -264,7 +266,6 @@
 		 */
 		protected function applyPlayerGemCollision(e: UpdateEvent, dir: Point, player: Player, gem: Gem): void {
 			// TODO: pickup gem
-			trace("collect");
 			collectGem(e, gem);
 		}
 
