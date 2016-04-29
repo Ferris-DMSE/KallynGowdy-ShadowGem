@@ -177,7 +177,7 @@
 		 */
 		public function checkLevelCollisions(e: UpdateEvent): void {
 			checkCharacterCollisions(e, player);
-			checkCollision(player, monsters);
+			checkCollision(e, player, monsters);
 			for each(var monster in monsters) {
 				checkCharacterCollisions(e, monster);
 			}
@@ -186,13 +186,14 @@
 		/**
 		 * Checks the collisions between the given character and other objects in the level.
 		 * @param e:UpdateEvent The current frame update event.
+		 * @param character:Character The character to check for collisions.
 		 */
 		protected function checkCharacterCollisions(e: UpdateEvent, character: Character): void {
-			var crate = checkCollision(character, crates);
-			var floor = checkCollision(character, floors);
-			var wall = checkCollision(character, walls);
-			var gem = checkCollision(character, gems);
-			var obj = checkCollision(character, objects);
+			var crate = checkCollision(e, character, crates);
+			var floor = checkCollision(e, character, floors);
+			var wall = checkCollision(e, character, walls);
+			var gem = checkCollision(e, character, gems);
+			var obj = checkCollision(e, character, objects);
 			if(!crate && !floor && !obj) {
 				character.isGrounded = false;
 			}
@@ -200,15 +201,16 @@
 
 		/**
 		 * Checks for a collision between the given first object and the list of objects.
+		 * @param e:UpdateEvent      The current frame update event.
 		 * @param first:MovingObject The first object that is colliding with the second. When it comes to fixing the overlap, this one is going to be moved.
 		 * @param objects:Array 	   The array of objects that collisions should be checked against.
 		 * @return Boolean           Whether the first object collided with one of the objects in the given array.
 		 */
-		protected function checkCollision(first: MovingObject, objects: Array): Boolean {
+		protected function checkCollision(e: UpdateEvent, first: MovingObject, objects: Array): Boolean {
 			var collision: Boolean = false;
 			for each(var obj: BoundedObject in objects) {
 				if(first.collidesWith(obj)) {
-					applyCollision(first, obj);
+					applyCollision(e, first, obj);
 					collision = true;
 				}
 			}
@@ -217,33 +219,36 @@
 
 		/**
 		 * Applies the affects of a collision between the first object and the second one.
+		 * @param e:UpdateEvent       The current frame update event.
 		 * @param first:MovingObject  The object that is colliding with the second.
 		 * @param second:MovingObject The object that the first is colliding with.
 		 */
-		protected function applyCollision(first: MovingObject, second: BoundedObject): void {
+		protected function applyCollision(e: UpdateEvent, first: MovingObject, second: BoundedObject): void {
 			var dir: Point = second.getOverlapFix(first);
 			if(first is Character) {
-				applyCharacterCollision(dir, Character(first), second);
+				applyCharacterCollision(e, dir, Character(first), second);
 			} else {
-				applyNormalCollision(dir, first, second);
+				applyNormalCollision(e, dir, first, second);
 			}
 		}
 
 		/**
 		 * Applies the affects of a collision between a character and some other object.
+		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the player needs to move in to fix the overlap.
 		 * @param character:Character The player that is colliding with something.
 		 * @param second:BoundedObject The object that the player is colliding with.
 		 */
-		protected function applyCharacterCollision(dir: Point, character: Character, second: BoundedObject): void {
+		protected function applyCharacterCollision(e: UpdateEvent, dir: Point, character: Character, second: BoundedObject): void {
 				if(character is Player && second is Gem) {
-					applyPlayerGemCollision(dir, Player(character), Gem(second));
-				} if(character is Player && second is Monster) {
-					applyPlayerMonsterCollision(dir, Player(character), Monster(second));
+					applyPlayerGemCollision(e, dir, Player(character), Gem(second));
+				} else if(character is Player && second is Monster) {
+					applyPlayerMonsterCollision(e, dir, Player(character), Monster(second));
 				} else if(second is Crate) {
-					applyCharacterCrateCollision(dir, character, Crate(second));
+					applyCharacterCrateCollision(e, dir, character, Crate(second));
+					// Only apply the collision if the player is moving down or the fix is up.
 				} else if(character.velocity.y >= 0 || dir.y > 0 || Math.abs(dir.x) > 0) {
-					applyNormalCollision(dir, character, second);
+					applyNormalCollision(e, dir, character, second);
 				}
 				if(dir.y < 0) {
 					character.isGrounded = true;
@@ -252,44 +257,50 @@
 
 		/**
 		 * Applies the affects of a collision between a player and a gem.
+		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the player needs to move in to fix the overlap.
 		 * @param player:Player The player that is colliding with the gem.
 		 * @param gem:Gem The gem that the player is colliding with.
 		 */
-		protected function applyPlayerGemCollision(dir: Point, player: Player, gem: Gem): void {
+		protected function applyPlayerGemCollision(e: UpdateEvent, dir: Point, player: Player, gem: Gem): void {
 			// TODO: pickup gem
+			trace("collect");
+			collectGem(e, gem);
 		}
 
 		/**
 		 * Applies the affects of a collision between a character and a crate.
+		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the character needs to move in to fix the overlap.
 		 * @param character:Character The character that is colliding with the crate.
 		 * @param crate:Crate The crate that the player is colliding with.
 		 */
-		protected function applyCharacterCrateCollision(dir: Point, character: Character, crate: Crate): void {
+		protected function applyCharacterCrateCollision(e: UpdateEvent, dir: Point, character: Character, crate: Crate): void {
 			// only apply the collision if the character is landing on the crate.
 			if(dir.y < 0 && character.velocity.y > 0) {
-				applyNormalCollision(dir, character, crate);
+				applyNormalCollision(e, dir, character, crate);
 			}
 		}
 
 		/**
 		 * Applies the affects of a collision between a player and a monster.
+		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the player needs to move in to fix the overlap.
 		 * @param player:Player The player that is colliding with the crate.
 		 * @param monster:Monster The monster that the player is colliding with.
 		 */
-		protected function applyPlayerMonsterCollision(dir: Point, player: Player, monster: Monster): void {
+		protected function applyPlayerMonsterCollision(e: UpdateEvent, dir: Point, player: Player, monster: Monster): void {
 			player.hurt(monster.damage);
 		}
 
 		/**
 		 * Applies the affects of a collision between two objects.
+		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the first object needs to move in to fix the overlap.
 		 * @param first:MovingObject The object that is colliding with the second.
 		 * @param second:MovingObject The object that is being collided with.
 		 */
-		protected function applyNormalCollision(dir: Point, first: MovingObject, second: BoundedObject): void {
+		protected function applyNormalCollision(e: UpdateEvent, dir: Point, first: MovingObject, second: BoundedObject): void {
 			first.x += dir.x;
 			first.y += dir.y;
 			if(dir.x != 0) {
@@ -298,6 +309,20 @@
 			if(dir.y != 0) {
 				first.velocity.y = 0;
 			}
+		}
+
+		/**
+		 * Collects the given gem and adds it to the player's score.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param gem:Gem The gem that should be collected.
+		 */
+		protected function collectGem(e: UpdateEvent, gem: Gem): void {
+			e.playerData.score += gem.worth;
+			var i: int = gems.indexOf(gem);
+			if(i >= 0) {
+				gems.splice(i, 1);
+			}
+			removeObjectFromDisplay(gem);
 		}
 
 	}

@@ -5,6 +5,7 @@
 	import com.kg.state.UpdateEvent;
 	import com.kg.state.GameManager;
 	import flash.display.DisplayObject;
+	import com.kg.obj.PlayerData;
 
 	/**
 	 * Defines the playing state for the game.
@@ -16,6 +17,11 @@
 		 */
 		private var level: Level;
 
+		/**
+		 * The player data for the game.
+		 */
+		private var playerData: PlayerData;
+
 		public function StatePlaying() {
 		}
 
@@ -24,9 +30,11 @@
 			level = new Level1();
 			addChild(level);
 			level.setup();
+			playerData = new PlayerData(null);
 		}
 
 		protected override function updateCore(e: UpdateEvent): void {
+			e.playerData = playerData;
 			level.update(e);
 		}
 	}
