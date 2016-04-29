@@ -20,6 +20,9 @@
 		 */
 		public var speed: Number = 100;
 
+		/**
+		 * The acceleration that the bullet experiences during it's lifetime.
+		 */
 		public var acceleration: Number = 200;
 
 		/**
