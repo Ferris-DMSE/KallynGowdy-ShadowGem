@@ -20,7 +20,7 @@
 		/**
 		 * The player data for the game.
 		 */
-		private var playerData: PlayerData;
+		private var playerData: ShadowGemPlayerData;
 
 		public function StatePlaying() {
 		}
@@ -30,7 +30,7 @@
 			level = new Level1();
 			addChild(level);
 			level.setup();
-			playerData = new PlayerData(null);
+			playerData = new ShadowGemPlayerData(null);
 		}
 
 		protected override function updateCore(e: UpdateEvent): void {

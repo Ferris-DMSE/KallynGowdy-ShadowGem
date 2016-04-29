@@ -37,9 +37,9 @@
 		protected var walls: Array;
 
 		/**
-		 * All of the gems in the game.
+		 * All of the pickups in the game.
 		 */
-		protected var gems: Array;
+		protected var pickups: Array;
 
 		/**
 		 * All of the crates in the game.
@@ -72,7 +72,7 @@
 		public override function setup(): void {
 			super.setup();
 			floors = [];
-			gems = [];
+			pickups = [];
 			crates = [];
 			objects = [];
 			walls = [];
@@ -122,8 +122,8 @@
 				} else {
 					walls.push(obj);
 				}
-			} else if(obj is Gem) {
-				gems.push(obj);
+			} else if(obj is Pickup) {
+				pickups.push(obj);
 			} else if(obj is Crate) {
 				crates.push(obj);
 			} else if(obj is Player) {
@@ -161,7 +161,7 @@
 			updateArray(e, floors);
 			updateArray(e, walls);
 			updateArray(e, crates);
-			updateArray(e, gems);
+			updateArray(e, pickups);
 			updateArray(e, monsters);
 			updateArray(e, monsterAffectors);
 			player.update(e);
@@ -204,7 +204,7 @@
 			var crate = checkCollision(e, character, crates);
 			var floor = checkCollision(e, character, floors);
 			var wall = checkCollision(e, character, walls);
-			var gem = checkCollision(e, character, gems);
+			var pickup = checkCollision(e, character, pickups);
 			var obj = checkCollision(e, character, objects);
 			if(!crate && !floor && !obj) {
 				character.isGrounded = false;
@@ -264,9 +264,9 @@
 		 * @param second:BoundedObject The object that the player is colliding with.
 		 */
 		protected function applyCharacterCollision(e: UpdateEvent, dir: Point, character: Character, second: BoundedObject): void {
-				if(second is Gem) {
+				if(second is Pickup) {
 					if(character is Player) {
-						applyPlayerGemCollision(e, dir, Player(character), Gem(second));
+						applyPlayerPickupCollision(e, dir, Player(character), Pickup(second));
 					}
 			  } else if(character is Player && second is Monster) {
 					applyPlayerMonsterCollision(e, dir, Player(character), Monster(second));
@@ -282,14 +282,23 @@
 		}
 
 		/**
-		 * Applies the affects of a collision between a player and a gem.
+		 * Applies the affects of a collision between a player and a pickupable item.
 		 * @param e:UpdateEvent The current frame update event.
 		 * @param dir:Point The direction that the player needs to move in to fix the overlap.
 		 * @param player:Player The player that is colliding with the gem.
-		 * @param gem:Gem The gem that the player is colliding with.
+		 * @param pickup:Pickup The pickup that the player is colliding with.
 		 */
-		protected function applyPlayerGemCollision(e: UpdateEvent, dir: Point, player: Player, gem: Gem): void {
-			collectGem(e, gem);
+		protected function applyPlayerPickupCollision(e: UpdateEvent, dir: Point, player: Player, pickup: Pickup): void {
+			if(pickup is Gem) {
+				collectGem(e, Gem(pickup));
+			} else if(pickup is Ammo) {
+				collectAmmo(e, Ammo(pickup));
+			}
+			var i: int = pickups.indexOf(pickup);
+			if(i >= 0) {
+				pickups.splice(i, 1);
+			}
+			removeObjectFromDisplay(pickup);
 		}
 
 		/**
@@ -342,11 +351,15 @@
 		 */
 		protected function collectGem(e: UpdateEvent, gem: Gem): void {
 			e.playerData.score += gem.worth;
-			var i: int = gems.indexOf(gem);
-			if(i >= 0) {
-				gems.splice(i, 1);
-			}
-			removeObjectFromDisplay(gem);
+		}
+
+		/**
+		 * Collects the given ammo and adds it to the player's ammo.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param ammo:Gem The ammo that should be collected.
+		 */
+		protected function collectAmmo(e: UpdateEvent, ammo: Ammo): void {
+			ShadowGemPlayerData(e.playerData).ammo += ammo.amount;
 		}
 
 	}

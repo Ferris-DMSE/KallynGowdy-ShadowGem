@@ -8,7 +8,7 @@ package com.kg.shadowgem {
   /**
    * Defines a class that represents a user-collectable gem.
    */
-	public class Gem extends RectangularObject {
+	public class Gem extends Pickup {
 
 		/**
 		 * The number of points that this gem is worth.
@@ -18,20 +18,6 @@ package com.kg.shadowgem {
 
 		public function Gem() {
 		}
-
-    public override function setup(): void {
-      super.setup();
-      velocity = new Point(0, 0);
-      // Gems do not die when offscreen
-      xMin = int.MIN_VALUE;
-      xMax = int.MAX_VALUE;
-      yMin = int.MIN_VALUE;
-      yMax = int.MAX_VALUE;
-    }
-
-    protected override function findColliderPosition(): Point {
-      return new Point(x - width / 2, y - width / 2);
-    }
 	}
 
 }

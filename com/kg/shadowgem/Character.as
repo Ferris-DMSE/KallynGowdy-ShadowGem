@@ -108,11 +108,20 @@ package com.kg.shadowgem {
     /**
      * Determines whether the character should begin jumping during the frame.
      * @param e:UpdateEvent The current frame update event.
-     * @param Boolean Whether the character should jump.
+     * @return Boolean Whether the character should jump.
      */
     protected function shouldJump(e: UpdateEvent): Boolean {
       return false;
     }
+
+		/**
+		 * Determines whether the character should shoot.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @return Boolean Whether the character should shoot during the frame.
+		 */
+		protected function shouldShoot(e: UpdateEvent): Boolean {
+			return false;
+		}
 
     /**
      * Finds the acceleration that should be applied to the character for the frame.
@@ -165,6 +174,9 @@ package com.kg.shadowgem {
 			flashDamage();
 		}
 
+		/**
+		 * Causes the character's color to flash white while the damage shield is active.
+		 */
 		protected function flashDamage(): void {
 			var trans: ColorTransform = new ColorTransform();
 			if(damageShieldLeft > 0 && Math.round(damageShieldLeft - 1) % 2 == 0) {
