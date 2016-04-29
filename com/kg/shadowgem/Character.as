@@ -167,7 +167,7 @@ package com.kg.shadowgem {
 
 		protected function flashDamage(): void {
 			var trans: ColorTransform = new ColorTransform();
-			if(damageShieldLeft > 0 && Math.round(damageShieldLeft * 3 - 1) % 2 == 0) {
+			if(damageShieldLeft > 0 && Math.round(damageShieldLeft - 1) % 2 == 0) {
 				trans.color = 0xFFFFFF;
 			}
 			this.transform.colorTransform = trans;

@@ -61,6 +61,11 @@
 		 */
 		protected var monsters: Array;
 
+		/**
+		 * All of the monster affectors in the level.
+		 */
+		protected var monsterAffectors: Array;
+
 		public function Level() {
 		}
 
@@ -72,6 +77,7 @@
 			objects = [];
 			walls = [];
 			monsters = [];
+			monsterAffectors = [];
 			setupCamera();
 			setupObjects();
 			camera.setTarget(player);
@@ -124,6 +130,8 @@
 				player = Player(obj);
 			} else if(obj is Monster) {
 				monsters.push(obj);
+			} else if(obj is MonsterAffector) {
+				monsterAffectors.push(obj);
 			} else {
 				objects.push(obj);
 			}
@@ -155,6 +163,7 @@
 			updateArray(e, crates);
 			updateArray(e, gems);
 			updateArray(e, monsters);
+			updateArray(e, monsterAffectors);
 			player.update(e);
 			gravity.affectObject(e, player);
 			checkLevelCollisions(e);
@@ -180,6 +189,9 @@
 			checkCollision(e, player, monsters);
 			for each(var monster in monsters) {
 				checkCharacterCollisions(e, monster);
+			}
+			for each(var monsterAffector in monsterAffectors) {
+				checkCollision(e, monsterAffector, monsters);
 			}
 		}
 
@@ -227,9 +239,21 @@
 			var dir: Point = second.getOverlapFix(first);
 			if(first is Character) {
 				applyCharacterCollision(e, dir, Character(first), second);
+			} else if(first is MonsterAffector && second is Monster) {
+				applyMonsterAffectorCollision(e, MonsterAffector(first), Monster(second));
 			} else {
 				applyNormalCollision(e, dir, first, second);
 			}
+		}
+
+		/**
+		 * Applies the effects of a collision between a monster and a monster affector.
+		 * @param e:UpdateEvent										 The current frame update event.
+		 * @param monsterAffector:MonsterAffector  The monster affector.
+		 * @param monster:Monster									 The monster.
+		 */
+		protected function applyMonsterAffectorCollision(e: UpdateEvent, monsterAffector: MonsterAffector, monster: Monster): void {
+			monsterAffector.affectMonster(e, monster);
 		}
 
 		/**
