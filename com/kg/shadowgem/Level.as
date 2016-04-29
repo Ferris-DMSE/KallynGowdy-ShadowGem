@@ -191,24 +191,28 @@
 			var crate = checkCollision(character, crates);
 			var floor = checkCollision(character, floors);
 			var wall = checkCollision(character, walls);
-			if(crate == null && floor == null) {
+			var gem = checkCollision(character, gems);
+			var obj = checkCollision(character, objects);
+			if(!crate && !floor && !obj) {
 				character.isGrounded = false;
 			}
-			var gem = checkCollision(character, gems);
 		}
 
 		/**
 		 * Checks for a collision between the given first object and the list of objects.
 		 * @param first:MovingObject The first object that is colliding with the second. When it comes to fixing the overlap, this one is going to be moved.
 		 * @param objects:Array 	   The array of objects that collisions should be checked against.
-		 * @return BoundedObject     The object that the first object collided with.
+		 * @return Boolean           Whether the first object collided with one of the objects in the given array.
 		 */
-		protected function checkCollision(first: MovingObject, objects: Array): BoundedObject {
-			var c: BoundedObject = first.findCollision(objects);
-			if(c != null) {
-				applyCollision(first, c);
+		protected function checkCollision(first: MovingObject, objects: Array): Boolean {
+			var collision: Boolean = false;
+			for each(var obj: BoundedObject in objects) {
+				if(first.collidesWith(obj)) {
+					applyCollision(first, obj);
+					collision = true;
+				}
 			}
-			return c;
+			return collision;
 		}
 
 		/**
