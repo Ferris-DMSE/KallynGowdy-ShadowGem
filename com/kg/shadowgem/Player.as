@@ -2,6 +2,7 @@
 
 	import flash.display.MovieClip;
 	import com.kg.obj.RectangularObject;
+	import com.kg.obj.MovingObject;
 	import flash.geom.Point;
 	import com.kg.state.UpdateEvent;
 	import flash.ui.Keyboard;
@@ -45,6 +46,14 @@
 				// moving right, normal
 				scaleX = 1;
 			}
+		}
+
+		protected override function shouldShoot(e: UpdateEvent): Boolean {
+			return e.keys.onDown(Keyboard.CONTROL);
+		}
+
+		protected override function createBullet(): MovingObject {
+			return new Bullet(new Point(velocity.x, 0));
 		}
 	}
 

@@ -6,6 +6,9 @@ package com.kg.shadowgem {
 	import com.kg.state.UpdateEvent;
 	import flash.ui.Keyboard;
 	import flash.geom.ColorTransform;
+	import com.kg.obj.MovingObject;
+	import com.kg.obj.BoundedObject;
+	import com.kg.obj.SingleEmitter;
 
 	/**
 	 * Defines a class that represents a character.
@@ -58,6 +61,16 @@ package com.kg.shadowgem {
 		 */
 		private var damageShieldLeft: Number;
 
+		/**
+		 * The amount of ammo that the character has left.
+		 */
+		public var ammo: int = int.MAX_VALUE;
+
+		/**
+		 * The bullets that this character has shot.
+		 */
+		private var bullets: SingleEmitter;
+
 		public function Character() {
 		}
 
@@ -65,6 +78,8 @@ package com.kg.shadowgem {
 			super.setup();
 			damageShieldLeft = -1;
 			velocity = new Point(0, 0);
+			bullets = new SingleEmitter();
+			parent.addChild(bullets);
 		}
 
     protected override function findNewVelocity(e: UpdateEvent): Point {
@@ -123,6 +138,15 @@ package com.kg.shadowgem {
 			return false;
 		}
 
+		/**
+		 * Determines if the character can shoot.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @return Boolean Whether the character can shoot.
+		 */
+		protected function canShoot(e: UpdateEvent): Boolean {
+			return ammo > 0;
+		}
+
     /**
      * Finds the acceleration that should be applied to the character for the frame.
      * @param e:UpdateEvent The current frame update event.
@@ -144,6 +168,25 @@ package com.kg.shadowgem {
 				velocity.y -= jumpForce;
 			}
     }
+
+		/**
+		 * Makes the character shoot a bullet.
+		 * @param e:UpdateEvent The current frame update event.
+		 */
+		public function shoot(e: UpdateEvent): void {
+			if(canShoot(e)) {
+				ammo--;
+				var bullet: MovingObject = createBullet();
+				bullets.emitGivenObject(bullet, new Point(x, y));
+			}
+		}
+
+		/**
+		 * Creates a new bullet for the character to shoot.
+		 */
+		protected function createBullet(): MovingObject {
+			return null;
+		}
 
 		/**
 		 * Damages the player and returns whether the player was damaged.
@@ -172,6 +215,10 @@ package com.kg.shadowgem {
 			damageShieldLeft -= e.deltaTime;
 			isDead = hasNoHealth();
 			flashDamage();
+			if(shouldShoot(e)) {
+				shoot(e);
+			}
+			bullets.update(e);
 		}
 
 		/**
@@ -183,6 +230,20 @@ package com.kg.shadowgem {
 				trans.color = 0xFFFFFF;
 			}
 			this.transform.colorTransform = trans;
+		}
+
+		/**
+		 * Checks for bullet collisions with the given object and returns the bullet that collided.
+		 * @param obj:BoundedObject The object to check for collisions with a bullet that this character shot.
+		 * @return MovingObject The bullet that hit the given object. Null if no collision was detected.
+		 */
+		public function findBulletCollisions(obj: BoundedObject): MovingObject {
+			return MovingObject(bullets.checkCollisions(obj));
+		}
+
+		public override function dispose(): void {
+			super.dispose();
+			parent.removeChild(bullets);
 		}
 	}
 
