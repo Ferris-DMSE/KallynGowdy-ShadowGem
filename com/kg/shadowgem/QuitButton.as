@@ -7,21 +7,24 @@
 	
 
 	/**
-	 * Defines a class that represents the continue button.
+	 * Defines a class that represents the quit button.
 	 */
-	public class ContinueButton extends GemButton {
+	public class QuitButton extends GemButton {
 
-		public function ContinueButton() {
+		public function QuitButton() {
 		}
 
+		protected override function animate(obj: DisplayObject): void {
+      obj.x = Math.sin(counter * 3) * 5;
+    }
+
 		protected override function getNormalGem(): DisplayObject {
-			return green;
+			return red;
 		}
 
 		protected override function getHoveredGem(): DisplayObject {
 			return shadow;
 		}
-
 	}
 
 }

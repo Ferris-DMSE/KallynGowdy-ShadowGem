@@ -32,12 +32,18 @@ package com.kg.shadowgem {
         if(continueButton.clicked) {
           unpause();
         }
+        if(quitButton.clicked) {
+          e.game.disposeState(pausedState);
+          e.game.switchState(new StateTitle());
+        }
         continueButton.update(e);
+        quitButton.update(e);
 		}
 
     public override function dispose(): void {
       super.dispose();
       continueButton.dispose();
+      quitButton.dispose();
     }
 	}
 

@@ -4,14 +4,13 @@
 	import com.kg.obj.Button;
 	import com.kg.state.UpdateEvent;
 	import flash.display.DisplayObject;
-	
 
 	/**
 	 * Defines a class that represents the continue button.
 	 */
-	public class ContinueButton extends GemButton {
+	public class PlayButton extends GemButton {
 
-		public function ContinueButton() {
+		public function PlayButton() {
 		}
 
 		protected override function getNormalGem(): DisplayObject {
@@ -21,7 +20,6 @@
 		protected override function getHoveredGem(): DisplayObject {
 			return shadow;
 		}
-
 	}
 
 }

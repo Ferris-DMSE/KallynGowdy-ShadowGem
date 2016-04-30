@@ -6,7 +6,7 @@
 	public class Game extends GameManager {
 
 		public function Game() {
-			switchState(new StatePlaying());
+			switchState(new StateTitle());
 		}
 	}
 
