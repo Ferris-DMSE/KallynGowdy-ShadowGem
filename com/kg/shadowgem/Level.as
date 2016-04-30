@@ -71,6 +71,11 @@
 		 */
 		private var playerDirtEmitter: DirtEmitter;
 
+		/**
+		 * All of the exits in the level.
+		 */
+		protected var exits: Array;
+
 		public function Level() {
 		}
 
@@ -83,6 +88,7 @@
 			walls = [];
 			monsters = [];
 			monsterAffectors = [];
+			exits = [];
 			setupCamera();
 			setupObjects();
 			setupDirtEmitter();
@@ -146,6 +152,8 @@
 				monsters.push(obj);
 			} else if(obj is MonsterAffector) {
 				monsterAffectors.push(obj);
+			} else if(obj is ExitDoor) {
+				exits.push(obj);
 			} else {
 				objects.push(obj);
 			}
@@ -178,6 +186,7 @@
 			updateArray(e, pickups);
 			updateArray(e, monsters);
 			updateArray(e, monsterAffectors);
+			updateArray(e, exits);
 			player.update(e);
 			playerDirtEmitter.update(e);
 			gravity.affectObject(e, player);
@@ -211,6 +220,7 @@
 		public function checkLevelCollisions(e: UpdateEvent): void {
 			checkCharacterCollisions(e, player);
 			checkCollision(e, player, monsters);
+			checkCollision(e, player, exits);
 			for each(var monster in monsters) {
 				checkCharacterCollisions(e, monster);
 				var bullet = player.findBulletCollisions(monster);
@@ -310,6 +320,8 @@
 					}
 			  } else if(character is Player && second is Monster) {
 					applyPlayerMonsterCollision(e, dir, Player(character), Monster(second));
+				} else if(character is Player && second is ExitDoor) {
+					applyPlayerExitCollision(e, dir, Player(character), ExitDoor(second));
 				} else if(second is Crate) {
 					applyCharacterCrateCollision(e, dir, character, Crate(second));
 					// Only apply the collision if the player is moving down or the fix is up.
@@ -319,6 +331,17 @@
 				if(dir.y < 0) {
 					character.isGrounded = true;
 				}
+		}
+
+		/**
+		 * Applies the affects of a collision between the player and an exit door.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param dir:Point     The direction that the player needs to move in to fix the overlap.
+		 * @param player:Player The player that is colliding with the door.
+		 * @param exit:ExitDoor The door that the player is colliding with.
+		 */
+		protected function applyPlayerExitCollision(e: UpdateEvent, dir: Point, player: Player, exit: ExitDoor): void {
+			isDead = true;
 		}
 
 		/**
