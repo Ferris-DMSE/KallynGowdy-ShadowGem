@@ -70,12 +70,22 @@ package com.kg.shadowgem {
 		/**
 		 * The bullets that this character has shot.
 		 */
-		private var bullets: SingleEmitter;
+		protected var bullets: SingleEmitter;
 
 		/**
 		 * The emitter that can emit the gun smoke for the bullets.
 		 */
 		private var gunSmoke: ExplosionEmitter;
+
+		/**
+		 * The number of seconds between gunshots.
+		 */
+		public var gunCooldown: Number = 1;
+
+		/**
+		 * The amount of time left for the gun to cooldown.
+		 */
+		private var gunCooldownLeft: Number = 0;
 
 		public function Character() {
 		}
@@ -158,7 +168,7 @@ package com.kg.shadowgem {
 		 * @return Boolean Whether the character can shoot.
 		 */
 		protected function canShoot(e: UpdateEvent): Boolean {
-			return ammo > 0;
+			return ammo > 0 && gunCooldownLeft <= 0;
 		}
 
     /**
@@ -189,19 +199,42 @@ package com.kg.shadowgem {
 		 */
 		public function shoot(e: UpdateEvent): void {
 			if(canShoot(e)) {
+				gunCooldownLeft = gunCooldown;
 				ammo--;
 				var bullet: MovingObject = createBullet();
 				bullets.emitGivenObject(bullet, new Point(x, y));
-				var dir: Number = velocity.x/Math.abs(velocity.x);
-				gunSmoke.emitExplosion(new Point(x + dir * 15, y - 10));
+				var dir: Point = getFacingDirection();
+				gunSmoke.emitExplosion(new Point(x + dir.x * 15, y + dir.y - 10));
 			}
+		}
+
+		/**
+		 * Gets the normalized vector that this character is facing in.
+		 * @return Point The Direction that the character is facing.
+		 */
+		public function getFacingDirection(): Point {
+			var rotation: Number = rotation * Math.PI/180;
+			if(scaleX < 0) {
+				rotation += Math.PI / 2;
+			}
+			var dir: Point = new Point(Math.cos(rotation), Math.sin(rotation));
+			return dir;
+		}
+
+		/**
+		 * Gets whether the character faces right by default.
+		 * Used to determine whether the shooting directions need to be flipped for the character.
+		 * @return Boolean Returns true if the character faces right by default. Otherwise false.
+		 */
+		protected function facesRightByDefault(): Boolean {
+			return true;
 		}
 
 		/**
 		 * Creates a new bullet for the character to shoot.
 		 */
 		protected function createBullet(): MovingObject {
-			return null;
+			throw new Error("createBullet() needs to be implemented in order to shoot.");
 		}
 
 		/**
@@ -239,6 +272,7 @@ package com.kg.shadowgem {
 			}
 			bullets.update(e);
 			gunSmoke.update(e);
+			gunCooldownLeft -= e.deltaTime;
 		}
 
 		/**

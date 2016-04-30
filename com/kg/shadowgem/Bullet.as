@@ -57,6 +57,12 @@
 			} else {
 				scaleX = 1;
 			}
+
+			if(Math.abs(velocity.y) > Math.abs(velocity.x)) {
+				rotation = 90;
+			} else {
+				rotation = 0;
+			}
 		}
 	}
 

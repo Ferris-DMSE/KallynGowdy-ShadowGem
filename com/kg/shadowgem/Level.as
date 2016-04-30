@@ -65,6 +65,11 @@
 		protected var monsterAffectors: Array;
 
 		/**
+		 * All of the turrets in the level.
+		 */
+		protected var turrets: Array;
+
+		/**
 		 * The emitter that emits dirt particles from the player's feet.
 		 */
 		private var playerDirtEmitter: DirtEmitter;
@@ -87,6 +92,7 @@
 			monsters = [];
 			monsterAffectors = [];
 			exits = [];
+			turrets = [];
 			setupCamera();
 			setupObjects();
 			setupDirtEmitter();
@@ -146,6 +152,8 @@
 				crates.push(obj);
 			} else if(obj is Player) {
 				player = Player(obj);
+			} else if(obj is TurretMonster) {
+				turrets.push(obj);
 			} else if(obj is Monster) {
 				monsters.push(obj);
 			} else if(obj is MonsterAffector) {
@@ -185,6 +193,7 @@
 			updateArray(e, monsters);
 			updateArray(e, monsterAffectors);
 			updateArray(e, exits);
+			updateArray(e, turrets);
 			player.update(e);
 			playerDirtEmitter.update(e);
 			gravity.affectObject(e, player);
@@ -219,11 +228,18 @@
 			checkCharacterCollisions(e, player);
 			checkCollision(e, player, monsters);
 			checkCollision(e, player, exits);
-			for each(var monster in monsters) {
+			checkCollision(e, player, turrets);
+			for each(var monster: Monster in monsters) {
 				checkCharacterCollisions(e, monster);
 				var bullet = player.findBulletCollisions(monster);
 				if(bullet != null && monster.hurt(1)) {
 					bullet.isDead = true;
+				}
+			}
+			for each(var turret: TurretMonster in turrets) {
+				var b = turret.findBulletCollisions(player);
+				if(b != null && player.hurt(1)) {
+					b.isDead = true;
 				}
 			}
 			for each(var monsterAffector in monsterAffectors) {
@@ -384,7 +400,9 @@
 		 * @param monster:Monster The monster that the player is colliding with.
 		 */
 		protected function applyPlayerMonsterCollision(e: UpdateEvent, dir: Point, player: Player, monster: Monster): void {
-			if(monster.explosion == null) {
+			if(monster is TurretMonster) {
+				TurretMonster(monster).shouldFire = true;
+			} else if(monster.explosion == null) {
 				player.hurt(monster.damage);
 			}
 		}

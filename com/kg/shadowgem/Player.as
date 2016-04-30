@@ -57,7 +57,7 @@
 		}
 
 		protected override function canShoot(e: UpdateEvent): Boolean {
-			return ShadowGemPlayerData(e.playerData).ammo > 0;
+			return ShadowGemPlayerData(e.playerData).ammo > 0 && super.canShoot(e);
 		}
 	}
 
