@@ -6,6 +6,7 @@
 	import flash.geom.Point;
 	import com.kg.state.UpdateEvent;
 	import flash.ui.Keyboard;
+	import com.kg.obj.Explosion;
 
 	/**
 	 * Defines a class that represents the player.
@@ -58,6 +59,12 @@
 
 		protected override function canShoot(e: UpdateEvent): Boolean {
 			return ShadowGemPlayerData(e.playerData).ammo > 0 && super.canShoot(e);
+		}
+
+		protected override function createExplosion(): Explosion {
+			var e: Explosion = new BoneExplosion();
+			e.y = -10;
+			return e;
 		}
 	}
 

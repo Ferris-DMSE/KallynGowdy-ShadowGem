@@ -199,6 +199,17 @@
 			gravity.affectObject(e, player);
 			gravity.affectObjects(e, [playerDirtEmitter]);
 			checkLevelCollisions(e);
+			checkLoss(e);
+		}
+
+		/**
+		 * Checks the game state to see if the player lost and updates the game correspondingly.
+		 * @param e:UpdateEvent The current frame update event.
+		 */
+		protected function checkLoss(e: UpdateEvent): void {
+			if(player.isDead) {
+				e.game.switchState(new StateLoss());
+			}
 		}
 
 		/**
