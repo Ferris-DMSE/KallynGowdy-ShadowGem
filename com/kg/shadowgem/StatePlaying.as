@@ -6,6 +6,7 @@
 	import com.kg.state.GameManager;
 	import flash.display.DisplayObject;
 	import com.kg.obj.PlayerData;
+	import flash.ui.Keyboard;
 
 	/**
 	 * Defines the playing state for the game.
@@ -49,6 +50,9 @@
 			level.update(e);
 			if(level.isDead) {
 				exitCurrentLevel();
+			}
+			if(e.keys.onUp(Keyboard.ESCAPE)) {
+				e.game.surroundState(new StatePaused(this));
 			}
 		}
 

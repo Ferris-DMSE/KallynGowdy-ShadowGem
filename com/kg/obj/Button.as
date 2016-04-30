@@ -4,6 +4,7 @@
 	import flash.text.TextField;
 	import flash.events.MouseEvent;
 	import flash.media.Sound;
+	import com.kg.state.UpdateEvent;
 
 	/**
 	 * Defines a generic button.
@@ -34,27 +35,14 @@
 		public var clickSound: Sound = null;
 
 		/**
-		 * Creates a new button with the given text.
-		 * @param text:String The text that should be shown on the button.
+		 * Creates a new button.
 		 */
-		public function Button(text: String = null) {
-			if(text) {
-				setText(text);
-			}
+		public function Button() {
 			mouseChildren = false;
 			buttonMode = true;
 			addEventListener(MouseEvent.CLICK, handleClick);
 			addEventListener(MouseEvent.ROLL_OVER, handleMouseOver);
 			addEventListener(MouseEvent.ROLL_OUT, handleMouseOut);
-			gotoAndStop(STATE_NORMAL);
-		}
-
-		/**
-		 * Changes the text displayed on this button to the given string of text.
-		 * @param text:String The text that should be displayed on the button.
-		 */
-		public function setText(text: String) {
-			btnText.text = text;
 		}
 
 		/**
@@ -65,6 +53,7 @@
 			if(clickSound != null) {
 				clickSound.play();
 			}
+			stage.focus = stage;
 		}
 
 		/**
@@ -72,7 +61,6 @@
 		 */
 		private function handleMouseOver(e: MouseEvent): void {
 			hovering = true;
-			gotoAndStop(STATE_HOVER);
 			if(hoverSound != null) {
 				hoverSound.play();
 			}
@@ -83,13 +71,13 @@
 		 */
 		private function handleMouseOut(e: MouseEvent): void {
 			hovering = false;
-			gotoAndStop(STATE_NORMAL);
 		}
 
 		/**
 		 * Updates the button.
+		 * @param e:UpdateEvent The current frame update event.
 		 */
-		public function update(): void {
+		public function update(e: UpdateEvent): void {
 			clicked = false;
 		}
 
