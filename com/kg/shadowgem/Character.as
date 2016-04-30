@@ -9,6 +9,7 @@ package com.kg.shadowgem {
 	import com.kg.obj.MovingObject;
 	import com.kg.obj.BoundedObject;
 	import com.kg.obj.SingleEmitter;
+	import com.kg.obj.ExplosionEmitter;
 
 	/**
 	 * Defines a class that represents a character.
@@ -71,6 +72,11 @@ package com.kg.shadowgem {
 		 */
 		private var bullets: SingleEmitter;
 
+		/**
+		 * The emitter that can emit the gun smoke for the bullets.
+		 */
+		private var gunSmoke: ExplosionEmitter;
+
 		public function Character() {
 		}
 
@@ -81,6 +87,13 @@ package com.kg.shadowgem {
 			velocity = new Point(0, 0);
 			bullets = new SingleEmitter();
 			parent.addChild(bullets);
+			gunSmoke = new ExplosionEmitter(createGunSmokeExplosion);
+			parent.addChild(gunSmoke);
+		}
+
+		protected function createGunSmokeExplosion(): GunSmokeExplosion {
+			// TODO:
+			return new GunSmokeExplosion(velocity.x/Math.abs(velocity.x));
 		}
 
     protected override function findNewVelocity(e: UpdateEvent): Point {
@@ -179,6 +192,8 @@ package com.kg.shadowgem {
 				ammo--;
 				var bullet: MovingObject = createBullet();
 				bullets.emitGivenObject(bullet, new Point(x, y));
+				var dir: Number = velocity.x/Math.abs(velocity.x);
+				gunSmoke.emitExplosion(new Point(x + dir * 15, y - 10));
 			}
 		}
 
@@ -195,7 +210,7 @@ package com.kg.shadowgem {
 		 * @return Boolean Whether the player was damaged.
 		 */
 		public function hurt(amount: int): Boolean {
-			if(damageShieldLeft <= 0) {
+			if(damageShieldLeft <= 0 && !hasNoHealth()) {
 				health -= amount;
 				if(hasNoHealth()) {
 					explode();
@@ -223,6 +238,7 @@ package com.kg.shadowgem {
 				shoot(e);
 			}
 			bullets.update(e);
+			gunSmoke.update(e);
 		}
 
 		/**
@@ -248,6 +264,7 @@ package com.kg.shadowgem {
 		public override function dispose(): void {
 			super.dispose();
 			parent.removeChild(bullets);
+			parent.removeChild(gunSmoke);
 		}
 	}
 

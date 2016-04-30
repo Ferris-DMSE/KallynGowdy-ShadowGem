@@ -214,8 +214,7 @@
 			for each(var monster in monsters) {
 				checkCharacterCollisions(e, monster);
 				var bullet = player.findBulletCollisions(monster);
-				if(bullet != null) {
-					monster.hurt(1);
+				if(bullet != null && monster.hurt(1)) {
 					bullet.isDead = true;
 				}
 			}

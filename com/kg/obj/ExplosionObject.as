@@ -26,8 +26,16 @@
 			var vX = Math.random() * 10 - 5;
 			var vY = Math.random() * 10 - 5;
 			velocity = new Point(vX, vY);
-			startingLifetime = Math.random() * 2;
-			lifetime = startingLifetime;
+			setLifetime(Math.random() * 2);
+		}
+
+		/**
+		 *  Sets the lifetime that this particle will experience.
+		 * @param lifetime:Number The time, in seconds, that the object will live for.
+		 */
+		protected function setLifetime(lifetime: Number): void {
+			startingLifetime = lifetime;
+			this.lifetime = startingLifetime;
 		}
 
 		/**
