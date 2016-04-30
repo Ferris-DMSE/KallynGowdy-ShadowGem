@@ -1,10 +1,8 @@
 ﻿package com.kg.shadowgem {
 	import com.kg.obj.MovingObject;
-	import Box2D.Dynamics.b2World;
 	import flash.display.DisplayObject;
 	import com.kg.obj.BoundedObject;
 	import com.kg.obj.ObjectEmitter;
-	import Box2D.Common.Math.b2Vec2;
 	import com.kg.state.UpdateEvent;
 	import com.kg.obj.Camera;
 	import flash.geom.Point;
