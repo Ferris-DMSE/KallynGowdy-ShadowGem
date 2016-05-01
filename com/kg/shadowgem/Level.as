@@ -340,6 +340,7 @@
 		 * @param second:BoundedObject The object that the player is colliding with.
 		 */
 		protected function applyCharacterCollision(e: UpdateEvent, dir: Point, character: Character, second: BoundedObject): void {
+				var unaffectedVelocity = character.velocity.clone();
 				if(second is Pickup) {
 					if(character is Player) {
 						applyPlayerPickupCollision(e, dir, Player(character), Pickup(second));

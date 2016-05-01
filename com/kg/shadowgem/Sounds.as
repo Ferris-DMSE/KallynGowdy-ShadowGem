@@ -105,7 +105,7 @@
 		 */
 		public static function mouseMonsterMove(): SoundInstance {
 			checkInitialized();
-			return SoundAS.play(MOUSE_MONSTER_MOVE, 1, 0, int.MAX_VALUE, true, true, true);
+			return SoundAS.play(MOUSE_MONSTER_MOVE, 0.1, 0, int.MAX_VALUE, true, true, true);
 		}
 
 		/**

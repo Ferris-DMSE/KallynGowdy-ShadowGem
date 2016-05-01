@@ -4,6 +4,7 @@ package com.kg.shadowgem {
 	import com.kg.obj.Button;
 	import com.kg.state.UpdateEvent;
   import flash.display.DisplayObject;
+	import treefortress.sound.SoundInstance;
 
 	/**
 	 * Defines a class that represents a button that animates a gem when hovered.
@@ -14,6 +15,11 @@ package com.kg.shadowgem {
 		 * The timer that represents where the button is in it's animation.
 		 */
 		protected var counter: Number = 0;
+
+		/**
+		 * Whether the mouse was hovering over the button during the last frame.
+		 */
+		private var wasHovering: Boolean = false;
 
 		public function GemButton() {
 		}
@@ -29,10 +35,14 @@ package com.kg.shadowgem {
         first.y = second.y;
 				first.x = second.x;
 				counter += e.deltaTime;
+				if(!wasHovering) {
+					Sounds.pickupGem();
+				}
 			} else {
 				first.alpha = 1;
 				second.alpha = 0;
 			}
+			wasHovering = hovering;
 		}
 
     /**
@@ -58,6 +68,10 @@ package com.kg.shadowgem {
     protected function getHoveredGem(): DisplayObject {
       return null;
     }
+
+		public override function dispose(): void {
+			super.dispose();
+		}
 	}
 
 }
