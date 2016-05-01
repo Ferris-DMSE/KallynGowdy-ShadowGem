@@ -63,6 +63,16 @@
     public var maxY: Number = 540;
 
     /**
+     * The amount of shake that is left in the camera.
+     */
+    private var shakeAmount: Number = 0;
+
+    /**
+     * The strength of the camera shake over time.
+     */
+    public var shakeStrength: Number = 25;
+
+    /**
      * Creates a new camera that lives at the given offset.
      * @param offset:Point The position that this camera should start at.
      */
@@ -102,8 +112,17 @@
       actualPos = new Point(actualPos.x + velocity.x * e.deltaTime, actualPos.y + velocity.y * e.deltaTime);
       canvas.x = actualPos.x;
       canvas.y = actualPos.y;
+      rotation = 0;
 
       // implement shake here:
+      if(shakeAmount > 0) {
+        var shake: Number = shakeStrength * shakeAmount;
+        canvas.x += Math.random() * shake;
+        canvas.y += Math.random() * shake;
+        /*rotation += Math.random() * shake;*/
+
+        shakeAmount -= e.deltaTime;
+      }
     }
 
     /**
@@ -144,6 +163,14 @@
      */
     public function setTarget(target: BoundedObject): void {
       this.target = target;
+    }
+
+    /**
+     * Shakes the camera for the specified amount of time.
+     * @param duration:Number The amount of time, in seconds that the camera should shake for.
+     */
+    public function shake(duration: Number): void {
+      shakeAmount += duration;
     }
 
 	}

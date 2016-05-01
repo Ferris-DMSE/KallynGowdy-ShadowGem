@@ -438,7 +438,9 @@
 			if(monster is TurretMonster) {
 				TurretMonster(monster).shouldFire = true;
 			} else if(monster.explosion == null) {
-				player.hurt(monster.damage);
+				if(player.hurt(monster.damage)) {
+					camera.shake(0.5);
+				}
 			}
 		}
 
