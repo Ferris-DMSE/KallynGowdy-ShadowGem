@@ -205,7 +205,6 @@ package com.kg.shadowgem {
 				setAmmo(e, getAmmo(e) - 1);
 				var bullet: MovingObject = createBullet();
 				bullets.emitGivenObject(bullet, new Point(x, y));
-				trace(dir, rotation, y + dir.y * 15);
 				gunSmoke.emitExplosion(new Point(x + dir.x * 15, Y));
 				playShootSound();
 			}
@@ -244,7 +243,6 @@ package com.kg.shadowgem {
 		public function getFacingDirection(): Point {
 			var rotation: Number = rotation * Math.PI/180;
 			if(scaleX < 0) {
-				trace("add");
 				rotation += Math.PI;
 			}
 			var dir: Point = new Point(Math.cos(rotation), Math.sin(rotation));
