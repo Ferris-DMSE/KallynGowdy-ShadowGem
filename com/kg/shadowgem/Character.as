@@ -190,6 +190,7 @@ package com.kg.shadowgem {
     public function jump(): void {
       if(isGrounded) {
 				velocity.y -= jumpForce;
+				Sounds.jump();
 			}
     }
 
@@ -205,7 +206,15 @@ package com.kg.shadowgem {
 				bullets.emitGivenObject(bullet, new Point(x, y));
 				var dir: Point = getFacingDirection();
 				gunSmoke.emitExplosion(new Point(x + dir.x * 15, y + dir.y - 10));
+				playShootSound();
 			}
+		}
+
+		/**
+		 * Plays the shooting sound for the character.
+		 */
+		protected function playShootSound(): void {
+			Sounds.shoot();
 		}
 
 		/**

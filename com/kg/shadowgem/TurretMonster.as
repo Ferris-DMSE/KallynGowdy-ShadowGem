@@ -57,6 +57,10 @@
 			super.update(e);
 			shouldFire = false;
 		}
+
+		protected override function playShootSound(): void {
+			Sounds.turretShoot();
+		}
 	}
 
 }

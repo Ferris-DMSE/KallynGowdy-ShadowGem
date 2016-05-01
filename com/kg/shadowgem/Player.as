@@ -64,6 +64,7 @@
 		protected override function createExplosion(): Explosion {
 			var e: Explosion = new BoneExplosion();
 			e.y = -10;
+			Sounds.lose();
 			return e;
 		}
 	}

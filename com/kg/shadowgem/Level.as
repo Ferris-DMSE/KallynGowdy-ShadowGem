@@ -98,6 +98,7 @@
 			setupDirtEmitter();
 			camera.setTarget(player);
 			gravity = new GravityAffector();
+			Sounds.loadLevel();
 		}
 
 		/**
@@ -442,6 +443,7 @@
 		 * @param gem:Gem The gem that should be collected.
 		 */
 		protected function collectGem(e: UpdateEvent, gem: Gem): void {
+			Sounds.pickupGem();
 			e.playerData.score += gem.worth;
 		}
 
@@ -451,6 +453,7 @@
 		 * @param ammo:Gem The ammo that should be collected.
 		 */
 		protected function collectAmmo(e: UpdateEvent, ammo: Ammo): void {
+			Sounds.pickupAmmo();
 			ShadowGemPlayerData(e.playerData).ammo += ammo.amount;
 		}
 
