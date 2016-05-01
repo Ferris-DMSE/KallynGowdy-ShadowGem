@@ -54,6 +54,7 @@
 			if(e.keys.onUp(Keyboard.ESCAPE)) {
 				e.game.surroundState(new StatePaused(this));
 			}
+			updateHud(e);
 		}
 
 		/**
@@ -63,6 +64,7 @@
 			if(level is MainLevel) {
 				loadLevel(levels[currentLevelIndex]());
 			} else {
+				playerData.livesLeft = 3;
 				loadLevel(new MainLevel(++currentLevelIndex));
 			}
 		}
@@ -77,7 +79,7 @@
 				removeChild(this.level);
 			}
 			this.level = level;
-			addChild(this.level);
+			addChildAt(this.level, 0);
 			this.level.setup();
 		}
 
@@ -86,6 +88,17 @@
 		 */
 		private static function createLevel1(): Level {
 			return new Level1();
+		}
+
+		/**
+		 * Updates the game's UI HUD.
+		 * @param e:UpdateEvent The current frame update event.
+		 */
+		private function updateHud(e: UpdateEvent): void {
+			heart1.alpha = playerData.livesLeft >= 1 ? 1 : 0;
+			heart2.alpha = playerData.livesLeft >= 2 ? 1 : 0;
+			heart3.alpha = playerData.livesLeft >= 3 ? 1 : 0;
+			ammoText.text = playerData.ammo.toString();
 		}
 	}
 

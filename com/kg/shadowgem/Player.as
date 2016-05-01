@@ -57,15 +57,19 @@
 			return new Bullet(new Point(velocity.x, 0));
 		}
 
-		protected override function canShoot(e: UpdateEvent): Boolean {
-			return ShadowGemPlayerData(e.playerData).ammo > 0 && super.canShoot(e);
-		}
-
 		protected override function createExplosion(): Explosion {
 			var e: Explosion = new BoneExplosion();
 			e.y = -10;
 			Sounds.lose();
 			return e;
+		}
+
+		protected override function getAmmo(e: UpdateEvent): int {
+			return ShadowGemPlayerData(e.playerData).ammo;
+		}
+
+		protected override function setAmmo(e: UpdateEvent, ammo: int): void {
+			ShadowGemPlayerData(e.playerData).ammo = ammo;
 		}
 	}
 

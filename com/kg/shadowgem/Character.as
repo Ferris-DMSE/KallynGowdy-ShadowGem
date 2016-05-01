@@ -167,7 +167,7 @@ package com.kg.shadowgem {
 		 * @return Boolean Whether the character can shoot.
 		 */
 		protected function canShoot(e: UpdateEvent): Boolean {
-			return ammo > 0 && gunCooldownLeft <= 0;
+			return getAmmo(e) > 0 && gunCooldownLeft <= 0;
 		}
 
     /**
@@ -202,7 +202,7 @@ package com.kg.shadowgem {
 				gunCooldownLeft = gunCooldown;
 				var dir: Point = getFacingDirection();
 				var Y: Number = y + dir.y * 15;
-				ammo--;
+				setAmmo(e, getAmmo(e) - 1);
 				var bullet: MovingObject = createBullet();
 				bullets.emitGivenObject(bullet, new Point(x, y));
 				trace(dir, rotation, y + dir.y * 15);
@@ -210,6 +210,25 @@ package com.kg.shadowgem {
 				playShootSound();
 			}
 		}
+
+		/**
+		 * Sets the amount of ammo that the character has left.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param ammo:int The ammo left.
+		 */
+		protected function setAmmo(e: UpdateEvent, ammo: int): void {
+			this.ammo = ammo;
+		}
+
+		/**
+		 * Gets the amount of ammo left.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @return int The amount of ammo left.
+		 */
+		protected function getAmmo(e: UpdateEvent): int {
+			return ammo;
+		}
+
 
 		/**
 		 * Plays the shooting sound for the character.
@@ -255,7 +274,7 @@ package com.kg.shadowgem {
 		 */
 		public function hurt(amount: int): Boolean {
 			if(damageShieldLeft <= 0 && !hasNoHealth()) {
-				health -= amount;
+				setHealth(getHealth() - amount);
 				if(hasNoHealth()) {
 					explode();
 				} else {
@@ -265,6 +284,22 @@ package com.kg.shadowgem {
 				return true;
 			}
 			return false;
+		}
+
+		/**
+		 * Gets the amount of health that the character has left.
+		 * @return int The amount of health that the character has left.
+		 */
+		public function getHealth(): int {
+			return health;
+		}
+
+		/**
+		 * Sets the amount of health that the character has left.
+		 * @param health:int The amount of health that should be set.
+		 */
+		protected function setHealth(health: int): void {
+			this.health = health;
 		}
 
 		/**
@@ -279,7 +314,7 @@ package com.kg.shadowgem {
 		 * @return Boolean Whether the player's health is out.
 		 */
 		private function hasNoHealth(): Boolean {
-			return health <= 0;
+			return getHealth() <= 0;
 		}
 
 		public override function update(e: UpdateEvent): void {

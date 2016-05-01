@@ -201,6 +201,7 @@
 			gravity.affectObjects(e, [playerDirtEmitter]);
 			checkLevelCollisions(e);
 			checkLoss(e);
+			e.playerData.livesLeft = player.getHealth();
 		}
 
 		/**
