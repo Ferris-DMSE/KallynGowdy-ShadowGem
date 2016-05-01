@@ -84,8 +84,17 @@
 		 * Checks this object's position against the boundaries.
 		 */
 		public function update(e: UpdateEvent): void {
-			var absolutePosition = this.localToGlobal(new Point());
+			var absolutePosition = getAbsolutePosition();
 			checkBoundaries(absolutePosition);
+		}
+
+		/**
+		 * Gets the absolute position that this object is at. In laymans terms, this is the actual position
+		 * that the object is placed on the screen at.
+		 * @return Point The point, in pixels, that this object is at on the screen.
+		 */
+		protected function getAbsolutePosition(): Point {
+			return this.localToGlobal(new Point());
 		}
 
 		/**

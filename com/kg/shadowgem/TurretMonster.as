@@ -19,7 +19,8 @@
 		}
 
 		protected override function shouldShoot(e: UpdateEvent): Boolean {
-			return shouldFire && bullets.objects.length <= 0;
+			var absPos = getAbsolutePosition();
+			return shouldFire && bullets.objects.length <= 0 && absPos.x >= 0 && absPos.y >= 0;
 		}
 
 		protected override function findColliderPosition(): Point {
