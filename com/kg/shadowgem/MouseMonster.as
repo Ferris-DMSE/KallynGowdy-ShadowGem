@@ -20,12 +20,14 @@
 
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
-			if(velocity.x < 0) {
-				// moving left, reflect player scale
-				scaleX = 1;
-			} else {
-				// moving right, normal
-				scaleX = -1;
+			if(explosion == null) {
+				if(velocity.x < 0) {
+					// moving left, reflect player scale
+					scaleX = 1;
+				} else {
+					// moving right, normal
+					scaleX = -1;
+				}
 			}
 		}
 
