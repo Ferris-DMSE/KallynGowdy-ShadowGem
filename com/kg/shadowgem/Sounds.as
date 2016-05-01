@@ -35,6 +35,11 @@
 		private static const MOUSE_MONSTER_MOVE: String = "MOUSE_MONSTER_MOVE";
 
 		/**
+		 * The name of the mouse monster moving sound.
+		 */
+		private static const MOUSE_MONSTER_HURT: String = "MOUSE_MONSTER_HURT";
+
+		/**
 		 * The name of the pickup ammo sound.
 		 */
 		private static const PICKUP_AMMO: String = "PICKUP_AMMO";
@@ -48,6 +53,11 @@
 		 * The name of the player shooting sound.
 		 */
 		private static const SHOOT: String = "SHOOT";
+
+		/**
+		 * The name of the player hurt sound.
+		 */
+		private static const HURT: String = "HURT";
 
 		/**
 		 * The name of the turret shooting sound.
@@ -82,12 +92,28 @@
 		}
 
 		/**
+		 * Plays the player hurt sound.
+		 */
+		public static function hurt(): void {
+			checkInitialized();
+			SoundAS.playFx(HURT);
+		}
+
+		/**
 		 * Plays the mouse monster moving sound.
 		 * @return SoundInstance The sound that represents the sound for the mouse movement. Stop this sound when the mouse dies.
 		 */
 		public static function mouseMonsterMove(): SoundInstance {
 			checkInitialized();
-			return SoundAS.play(MOUSE_MONSTER_MOVE);
+			return SoundAS.play(MOUSE_MONSTER_MOVE, 1, 0, int.MAX_VALUE, true, true, true);
+		}
+
+		/**
+		 * Plays the mouse monster hurt sound.
+		 */
+		public static function mouseMonsterHurt(): void {
+			checkInitialized();
+		  SoundAS.playFx(MOUSE_MONSTER_HURT);
 		}
 
 		/**
@@ -136,6 +162,8 @@
 				SoundAS.loadSound("audio/PickupGem.mp3", PICKUP_GEM);
 				SoundAS.loadSound("audio/Shoot.mp3", SHOOT);
 				SoundAS.loadSound("audio/TurretShoot.mp3", TURRET_SHOOT);
+				SoundAS.loadSound("audio/MouseMonsterHurt.mp3", MOUSE_MONSTER_HURT);
+				SoundAS.loadSound("audio/Hurt.mp3", HURT);
 				isInitialized = true;
 			}
 		}

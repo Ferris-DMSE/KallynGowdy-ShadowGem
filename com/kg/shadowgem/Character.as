@@ -259,9 +259,17 @@ package com.kg.shadowgem {
 				} else {
 					damageShieldLeft = damageShieldLength;
 				}
+				playHurtSound();
 				return true;
 			}
 			return false;
+		}
+
+		/**
+		 * Plays the hurt sound for the character.
+		 */
+		protected function playHurtSound(): void {
+			Sounds.hurt();
 		}
 
 		/**

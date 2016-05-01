@@ -3,6 +3,7 @@
 	import flash.display.MovieClip;
   import com.kg.state.UpdateEvent;
 	import flash.geom.Point;
+	import treefortress.sound.SoundInstance;
 
   /**
 	 * Defines a class that represents a mouse monster.
@@ -26,6 +27,14 @@
 				// moving right, normal
 				scaleX = -1;
 			}
+		}
+
+		protected override function playHurtSound(): void {
+			Sounds.mouseMonsterHurt();
+		}
+
+		public override function dispose(): void {
+			super.dispose();
 		}
 	}
 
