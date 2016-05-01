@@ -8,6 +8,7 @@
 	public class ShadowGem extends Gem {
 
 		public function ShadowGem() {
+			worth = 1000;
 		}
 	}
 

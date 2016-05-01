@@ -99,6 +99,7 @@
 			heart2.alpha = playerData.livesLeft >= 2 ? 1 : 0;
 			heart3.alpha = playerData.livesLeft >= 3 ? 1 : 0;
 			ammoText.text = playerData.ammo.toString();
+			scoreText.text = "$ " + playerData.score.toString();
 		}
 	}
 
