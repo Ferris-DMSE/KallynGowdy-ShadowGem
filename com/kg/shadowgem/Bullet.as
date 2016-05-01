@@ -40,6 +40,7 @@
 			super.setup();
 			velocity = new Point(direction.x * speed, direction.y * speed);
 			x += direction.x * 25;
+			y += direction.y * 25;
 		}
 
 		protected override function findColliderPosition(): Point {

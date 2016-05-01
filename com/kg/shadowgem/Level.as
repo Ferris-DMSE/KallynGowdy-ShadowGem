@@ -249,9 +249,14 @@
 				}
 			}
 			for each(var turret: TurretMonster in turrets) {
+				// TODO: Cleanup so that only one loop is needed.
 				var b = turret.findBulletCollisions(player);
 				if(b != null && player.hurt(1)) {
 					b.isDead = true;
+				} else {
+					for each(var tBullet: Bullet in turret.bullets.objects) {
+						checkBulletCollisions(e, tBullet);
+					}
 				}
 			}
 			for each(var monsterAffector in monsterAffectors) {
@@ -272,6 +277,17 @@
 		}
 
 		/**
+		 * Checks for collisions between the given bullet and other opaque objects in the level.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param obj:Bullet The bullet to check against the level.
+		 */
+		protected function checkBulletCollisions(e: UpdateEvent, obj: Bullet): void {
+			checkCollision(e, obj, floors);
+			checkCollision(e, obj, walls);
+			checkCollision(e, obj, objects);
+		}
+
+		/**
 		 * Checks the collisions between the given character and other objects in the level.
 		 * @param e:UpdateEvent The current frame update event.
 		 * @param character:Character The character to check for collisions.
@@ -282,6 +298,9 @@
 			var wall = checkCollision(e, character, walls);
 			var pickup = checkCollision(e, character, pickups);
 			var obj = checkCollision(e, character, objects);
+			for each(var b: Bullet in character.bullets.objects) {
+				checkBulletCollisions(e, b);
+			}
 			if(!crate && !floor && !obj) {
 				character.isGrounded = false;
 			}
@@ -317,6 +336,8 @@
 				applyCharacterCollision(e, dir, Character(first), second);
 			} else if(first is MonsterAffector && second is Monster) {
 				applyMonsterAffectorCollision(e, MonsterAffector(first), Monster(second));
+			} else if(first is Bullet) {
+				applyBulletCollision(e, dir, Bullet(first), second);
 			} else {
 				applyNormalCollision(e, dir, first, second);
 			}
@@ -436,6 +457,17 @@
 			if(dir.y != 0) {
 				first.velocity.y = 0;
 			}
+		}
+
+		/**
+		 * Applies the affects of a collision between a bullet and another object in the game.
+		 * @param e:UpdateEvent The current frame update event.
+		 * @param dir:Point The direction that the bullet needs to move in to fix the overlap.
+		 * @param bullet:Bullet The object that is colliding with the second.
+		 * @param second:MovingObject The object that is being collided with.
+		 */
+		protected function applyBulletCollision(e: UpdateEvent, dir: Point, bullet: Bullet, second: BoundedObject): void {
+			bullet.isDead = true;
 		}
 
 		/**

@@ -70,7 +70,7 @@ package com.kg.shadowgem {
 		/**
 		 * The bullets that this character has shot.
 		 */
-		protected var bullets: SingleEmitter;
+		public var bullets: SingleEmitter;
 
 		/**
 		 * The emitter that can emit the gun smoke for the bullets.
@@ -102,7 +102,6 @@ package com.kg.shadowgem {
 		}
 
 		protected function createGunSmokeExplosion(): GunSmokeExplosion {
-			// TODO:
 			return new GunSmokeExplosion(velocity.x/Math.abs(velocity.x));
 		}
 
@@ -201,11 +200,13 @@ package com.kg.shadowgem {
 		public function shoot(e: UpdateEvent): void {
 			if(canShoot(e)) {
 				gunCooldownLeft = gunCooldown;
+				var dir: Point = getFacingDirection();
+				var Y: Number = y + dir.y * 15;
 				ammo--;
 				var bullet: MovingObject = createBullet();
 				bullets.emitGivenObject(bullet, new Point(x, y));
-				var dir: Point = getFacingDirection();
-				gunSmoke.emitExplosion(new Point(x + dir.x * 15, y + dir.y - 10));
+				trace(dir, rotation, y + dir.y * 15);
+				gunSmoke.emitExplosion(new Point(x + dir.x * 15, Y));
 				playShootSound();
 			}
 		}
@@ -224,7 +225,8 @@ package com.kg.shadowgem {
 		public function getFacingDirection(): Point {
 			var rotation: Number = rotation * Math.PI/180;
 			if(scaleX < 0) {
-				rotation += Math.PI / 2;
+				trace("add");
+				rotation += Math.PI;
 			}
 			var dir: Point = new Point(Math.cos(rotation), Math.sin(rotation));
 			return dir;
@@ -232,7 +234,7 @@ package com.kg.shadowgem {
 
 		/**
 		 * Gets whether the character faces right by default.
-		 * Used to determine whether the shooting directions need to be flipped for the character.
+		 * Not Used.
 		 * @return Boolean Returns true if the character faces right by default. Otherwise false.
 		 */
 		protected function facesRightByDefault(): Boolean {
