@@ -186,6 +186,8 @@
 			for each(var obj in objects) {
 				obj.update(e);
 			}
+			gravity.affectObject(e, player);
+			gravity.affectObjects(e, [playerDirtEmitter]);
 			updateArray(e, objects);
 			updateArray(e, floors);
 			updateArray(e, walls);
@@ -195,10 +197,8 @@
 			updateArray(e, monsterAffectors);
 			updateArray(e, exits);
 			updateArray(e, turrets);
-			player.update(e);
 			playerDirtEmitter.update(e);
-			gravity.affectObject(e, player);
-			gravity.affectObjects(e, [playerDirtEmitter]);
+			player.update(e);
 			checkLevelCollisions(e);
 			checkLoss(e);
 			e.playerData.livesLeft = player.getHealth();
@@ -253,6 +253,7 @@
 				// TODO: Cleanup so that only one loop is needed.
 				var b = turret.findBulletCollisions(player);
 				if(b != null && player.hurt(1)) {
+					camera.shake(0.5);
 					b.isDead = true;
 				} else {
 					for each(var tBullet: Bullet in turret.bullets.objects) {
@@ -302,9 +303,6 @@
 			for each(var b: Bullet in character.bullets.objects) {
 				checkBulletCollisions(e, b);
 			}
-			if(!crate && !floor && !obj) {
-				character.isGrounded = false;
-			}
 		}
 
 		/**
@@ -339,8 +337,6 @@
 				applyMonsterAffectorCollision(e, MonsterAffector(first), Monster(second));
 			} else if(first is Bullet) {
 				applyBulletCollision(e, dir, Bullet(first), second);
-			} else {
-				applyNormalCollision(e, dir, first, second);
 			}
 		}
 
@@ -371,14 +367,13 @@
 					applyPlayerMonsterCollision(e, dir, Player(character), Monster(second));
 				} else if(character is Player && second is ExitDoor) {
 					applyPlayerExitCollision(e, dir, Player(character), ExitDoor(second));
-				} else if(second is Crate) {
-					applyCharacterCrateCollision(e, dir, character, Crate(second));
-					// Only apply the collision if the player is moving down or the fix is up.
-				} else if(character.velocity.y >= 0 || dir.y > 0 || Math.abs(dir.x) > 0) {
-					applyNormalCollision(e, dir, character, second);
-				}
-				if(dir.y < 0) {
-					character.isGrounded = true;
+				} else {
+					if(second is Crate) {
+						applyCharacterCrateCollision(e, dir, character, Crate(second));
+						// Only apply the collision if the player is moving down or the fix is down.
+					} else if(character.velocity.y >= 0 || dir.y > 0 || Math.abs(dir.x) > 0) {
+						applyNormalCollision(e, dir, character, second);
+					}
 				}
 		}
 
@@ -452,14 +447,17 @@
 		 * @param second:MovingObject The object that is being collided with.
 		 */
 		protected function applyNormalCollision(e: UpdateEvent, dir: Point, first: MovingObject, second: BoundedObject): void {
-			first.x += dir.x;
-			first.y += dir.y;
 			if(dir.x != 0) {
 				first.velocity.x = 0;
 			}
 			if(dir.y != 0) {
+				if(first is Character) {
+					Character(first).isGrounded = true;
+				}
 				first.velocity.y = 0;
 			}
+			first.x += dir.x;
+			first.y += dir.y;
 		}
 
 		/**

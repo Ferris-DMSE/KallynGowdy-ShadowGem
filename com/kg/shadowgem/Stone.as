@@ -12,7 +12,11 @@
 		}
 
 		protected override function findColliderPosition(): Point {
-			return new Point(x - width / 2, y - height / 2);
+			return new Point(x - 25, y - 25);
+		}
+
+		protected override function findColliderSize(): Point {
+			return new Point(50, 50);
 		}
 
 		public override function setup(): void {

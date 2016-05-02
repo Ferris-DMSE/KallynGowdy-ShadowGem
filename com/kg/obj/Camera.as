@@ -101,7 +101,7 @@
 
           return new Point(targetDir.x * acceleration, targetDir.y * acceleration);
         } else {
-          return new Point(targetDir.x / 1.2, targetDir.y / 1.2);
+          return new Point(0, 0);
         }
       }
       return new Point(0, 0);

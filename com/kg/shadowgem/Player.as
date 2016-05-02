@@ -17,7 +17,11 @@
 		}
 
 		protected override function findColliderPosition(): Point {
-			return new Point(x - width / 2, y - 37.6 / 2);
+			return new Point(x - 6, y - 18.8);
+		}
+
+		protected override function findColliderSize(): Point {
+			return new Point(23, 37.6);
 		}
 
 		protected override function shouldMoveLeft(e: UpdateEvent): Boolean {
@@ -34,11 +38,11 @@
 
 		public override function update(e: UpdateEvent): void {
 			super.update(e);
-			if(currentFrame <= 81 && Math.abs(velocity.x) < 1) {
+			/*if(currentFrame <= 81 && Math.abs(velocity.x) < 1) {
 				gotoAndPlay("idle");
 			} else if(currentFrame > 82 && Math.abs(velocity.x) > 1) {
 				gotoAndPlay("moving");
-			}
+			}*/
 
 			if(velocity.x < 0) {
 				// moving left, reflect player scale
@@ -47,6 +51,7 @@
 				// moving right, normal
 				scaleX = 1;
 			}
+			isGrounded = false;
 		}
 
 		protected override function shouldShoot(e: UpdateEvent): Boolean {
@@ -71,6 +76,7 @@
 		protected override function setAmmo(e: UpdateEvent, ammo: int): void {
 			ShadowGemPlayerData(e.playerData).ammo = ammo;
 		}
+
 	}
 
 }
