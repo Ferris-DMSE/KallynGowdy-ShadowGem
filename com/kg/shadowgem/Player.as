@@ -17,12 +17,12 @@
 		}
 
 		protected override function findColliderPosition(): Point {
-			return new Point(x - 6, y - 18.8);
+			return new Point(x - width / 2, y - 18.8);
 		}
 
-		protected override function findColliderSize(): Point {
+		/*protected override function findColliderSize(): Point {
 			return new Point(23, 37.6);
-		}
+		}*/
 
 		protected override function shouldMoveLeft(e: UpdateEvent): Boolean {
       return e.keys.isDown(Keyboard.LEFT) || e.keys.isDown(Keyboard.A);

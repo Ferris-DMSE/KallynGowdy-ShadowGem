@@ -84,6 +84,7 @@
 		 * Checks this object's position against the boundaries.
 		 */
 		public function update(e: UpdateEvent): void {
+			updateCollider(e);
 			var absolutePosition = getAbsolutePosition();
 			checkBoundaries(absolutePosition);
 		}
@@ -144,6 +145,13 @@
 		 */
 		public function getOverlapFix(other: BoundedObject): Point {
 			return collider.getOverlapFix(other.collider);
+		}
+
+		/**
+		 * Updates the collider on this object.
+		 * @param e:UpdateEvent The current frame update event.
+		 */
+		public function updateCollider(e: UpdateEvent): void {
 		}
 
 		/**

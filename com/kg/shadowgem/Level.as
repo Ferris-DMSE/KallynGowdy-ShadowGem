@@ -116,9 +116,9 @@
 		private function findObjects(): Array {
 			var objects: Array = [];
 			for(var i = 0; i < numChildren; i++) {
-				var c:BoundedObject = getChildAt(i) as BoundedObject;
-				if(c != null && c != camera) {
-					objects.push(c);
+				var obj: DisplayObject = getChildAt(i);
+				if(obj != camera) {
+					objects.push(obj);
 				}
 			}
 			return objects;
@@ -135,34 +135,36 @@
 
 		/**
 		 * Sets up the given object in the level.
-		 * @param obj:BoundedObject The object that should be setup.
+		 * @param obj:DisplayObject The object that should be setup.
 		 */
-		protected function setupObject(obj: BoundedObject): void {
+		protected function setupObject(obj: DisplayObject): void {
 			removeChild(obj);
 			camera.addContent(obj);
-			obj.setup();
-			if(obj is MetalFloor) {
-				if(Math.abs(obj.rotation) < 45) {
-					floors.push(obj);
+			if(obj is BoundedObject) {
+				BoundedObject(obj).setup();
+				if(obj is MetalFloor) {
+					if(Math.abs(obj.rotation) < 45) {
+						floors.push(obj);
+					} else {
+						walls.push(obj);
+					}
+				} else if(obj is Pickup) {
+					pickups.push(obj);
+				} else if(obj is Crate) {
+					crates.push(obj);
+				} else if(obj is Player) {
+					player = Player(obj);
+				} else if(obj is TurretMonster) {
+					turrets.push(obj);
+				} else if(obj is Monster) {
+					monsters.push(obj);
+				} else if(obj is MonsterAffector) {
+					monsterAffectors.push(obj);
+				} else if(obj is ExitDoor) {
+					exits.push(obj);
 				} else {
-					walls.push(obj);
+					objects.push(obj);
 				}
-			} else if(obj is Pickup) {
-				pickups.push(obj);
-			} else if(obj is Crate) {
-				crates.push(obj);
-			} else if(obj is Player) {
-				player = Player(obj);
-			} else if(obj is TurretMonster) {
-				turrets.push(obj);
-			} else if(obj is Monster) {
-				monsters.push(obj);
-			} else if(obj is MonsterAffector) {
-				monsterAffectors.push(obj);
-			} else if(obj is ExitDoor) {
-				exits.push(obj);
-			} else {
-				objects.push(obj);
 			}
 		}
 
@@ -175,7 +177,7 @@
 		 */
 		protected function setupObjects(): void {
 			var objs: Array = findObjects();
-			for each(var obj: BoundedObject in objs) {
+			for each(var obj: DisplayObject in objs) {
 				setupObject(obj);
 			}
 		}
@@ -186,8 +188,6 @@
 			for each(var obj in objects) {
 				obj.update(e);
 			}
-			gravity.affectObject(e, player);
-			gravity.affectObjects(e, [playerDirtEmitter]);
 			updateArray(e, objects);
 			updateArray(e, floors);
 			updateArray(e, walls);
@@ -197,6 +197,8 @@
 			updateArray(e, monsterAffectors);
 			updateArray(e, exits);
 			updateArray(e, turrets);
+			gravity.affectObject(e, player);
+			gravity.affectObjects(e, [playerDirtEmitter]);
 			playerDirtEmitter.update(e);
 			player.update(e);
 			checkLevelCollisions(e);
@@ -447,17 +449,19 @@
 		 * @param second:MovingObject The object that is being collided with.
 		 */
 		protected function applyNormalCollision(e: UpdateEvent, dir: Point, first: MovingObject, second: BoundedObject): void {
+			dir = second.getOverlapFix(first);
 			if(dir.x != 0) {
 				first.velocity.x = 0;
 			}
+			if((dir.y < 0 || dir.x == 0 && dir.y == 0) && first is Character) {
+				Character(first).isGrounded = true;
+			}
 			if(dir.y != 0) {
-				if(first is Character) {
-					Character(first).isGrounded = true;
-				}
 				first.velocity.y = 0;
 			}
 			first.x += dir.x;
 			first.y += dir.y;
+			first.updateCollider(e);
 		}
 
 		/**

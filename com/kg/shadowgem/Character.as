@@ -190,6 +190,8 @@ package com.kg.shadowgem {
       if(isGrounded) {
 				velocity.y -= jumpForce;
 				Sounds.jump();
+			} else {
+				trace("no jump");
 			}
     }
 

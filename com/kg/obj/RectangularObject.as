@@ -34,9 +34,8 @@ package com.kg.obj {
 			return new Point(width, height);
 		}
 
-		public override function update(e: UpdateEvent): void {
+		public override function updateCollider(e: UpdateEvent): void {
 			RectangleCollider(collider).setPosition(findColliderPosition());
-			super.update(e);
 		}
 
 	}

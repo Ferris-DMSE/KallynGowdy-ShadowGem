@@ -17,7 +17,8 @@
 		 * The array of level factories.
 		 */
 		private static var levels: Array = [
-			createLevel1
+			createLevel1,
+			createLevel2
 		];
 
 		/**
@@ -88,6 +89,13 @@
 		 */
 		private static function createLevel1(): Level {
 			return new Level1();
+		}
+
+		/**
+		 * Creates the second level, Level 2.
+		 */
+		private static function createLevel2(): Level {
+			return new Level2();
 		}
 
 		/**

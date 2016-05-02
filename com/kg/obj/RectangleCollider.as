@@ -118,6 +118,7 @@ package com.kg.obj {
 		/**
 		 * Determines if this collider collides with the given other collider.
 		 * @param other:RectangleCollider The other collider to check for collision with.
+		 * @return Boolean Whether the two collide.
 		 */
 		public function collidesWith(other: ICollider): Boolean {
 			var rect: RectangleCollider = other as RectangleCollider;
@@ -136,6 +137,11 @@ package com.kg.obj {
 			return false;
 		}
 
+		/**
+		 * Gets the direction that this collider needs to move in in order to fix the overlap with the given other collider.
+		 * @param other:ICollider The colider to fix the overlap with.
+		 * @return Point The point that represents the x and y direction that this collider needs to move in.
+		 */
 		public function getOverlapFix(other: ICollider): Point {
 			var rect: RectangleCollider = RectangleCollider(other);
 			var solution:Point = new Point(0,0);
