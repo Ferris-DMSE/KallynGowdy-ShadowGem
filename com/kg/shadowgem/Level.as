@@ -79,6 +79,11 @@
 		 */
 		protected var exits: Array;
 
+		/**
+		 * The amount of time in seconds that the level should wait for before updating anything.
+		 */
+		protected var startingWaitTime: Number = 0.5;
+
 		public function Level() {
 		}
 
@@ -183,27 +188,30 @@
 		}
 
 		public override function update(e: UpdateEvent): void {
-			super.update(e);
-			camera.update(e);
-			for each(var obj in objects) {
-				obj.update(e);
+			startingWaitTime -= e.deltaTime;
+			if(startingWaitTime < 0) {
+				super.update(e);
+				camera.update(e);
+				for each(var obj in objects) {
+					obj.update(e);
+				}
+				updateArray(e, objects);
+				updateArray(e, floors);
+				updateArray(e, walls);
+				updateArray(e, crates);
+				updateArray(e, pickups);
+				updateArray(e, monsters);
+				updateArray(e, monsterAffectors);
+				updateArray(e, exits);
+				updateArray(e, turrets);
+				gravity.affectObject(e, player);
+				gravity.affectObjects(e, [playerDirtEmitter]);
+				playerDirtEmitter.update(e);
+				player.update(e);
+				checkLevelCollisions(e);
+				checkLoss(e);
+				e.playerData.livesLeft = player.getHealth();
 			}
-			updateArray(e, objects);
-			updateArray(e, floors);
-			updateArray(e, walls);
-			updateArray(e, crates);
-			updateArray(e, pickups);
-			updateArray(e, monsters);
-			updateArray(e, monsterAffectors);
-			updateArray(e, exits);
-			updateArray(e, turrets);
-			gravity.affectObject(e, player);
-			gravity.affectObjects(e, [playerDirtEmitter]);
-			playerDirtEmitter.update(e);
-			player.update(e);
-			checkLevelCollisions(e);
-			checkLoss(e);
-			e.playerData.livesLeft = player.getHealth();
 		}
 
 		/**

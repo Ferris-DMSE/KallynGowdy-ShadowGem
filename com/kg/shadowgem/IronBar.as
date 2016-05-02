@@ -6,13 +6,10 @@
 	import com.kg.state.UpdateEvent;
 
 	/**
-	 * Defines a class that represents a floor.
-	 * This floor is not actually metal, but I named it before I made the art, so I never renamed it.
+	 * Defines a class that represents a piece of flooring that looks like an iron bar.
 	 */
-	public class MetalFloor extends RectangularObject {
-
-		public function MetalFloor() {
-			super();
+	public class IronBar extends RectangularObject {
+		public function IronBar() {
 		}
 
 		public override function setup(): void {
@@ -28,5 +25,4 @@
 			return new Point(0, 0);
 		}
 	}
-
 }
