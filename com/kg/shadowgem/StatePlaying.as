@@ -17,8 +17,8 @@
 		 * The array of level factories.
 		 */
 		private static var levels: Array = [
-			createLevel1,
-			createLevel2
+			createLevel1
+			/*createLevel2*/
 		];
 
 		/**
@@ -50,7 +50,7 @@
 			e.playerData = playerData;
 			level.update(e);
 			if(level.isDead) {
-				exitCurrentLevel();
+				exitCurrentLevel(e);
 			}
 			if(e.keys.onUp(Keyboard.ESCAPE)) {
 				e.game.surroundState(new StatePaused(this));
@@ -60,13 +60,19 @@
 
 		/**
 		 * Exits the current level and returns to the level selection level.
+		 * @param e:UpdateEvent The current frame update event.
 		 */
-		private function exitCurrentLevel(): void {
+		private function exitCurrentLevel(e: UpdateEvent): void {
 			if(level is MainLevel) {
 				loadLevel(levels[currentLevelIndex]());
 			} else {
-				playerData.livesLeft = 3;
-				loadLevel(new MainLevel(++currentLevelIndex));
+				currentLevelIndex++;
+				if(currentLevelIndex >= levels.length) {
+					e.game.switchState(new StateWin(playerData));
+				} else {
+					playerData.livesLeft = 3;
+					loadLevel(new MainLevel(++currentLevelIndex));
+				}
 			}
 		}
 
