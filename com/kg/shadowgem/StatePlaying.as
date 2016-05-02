@@ -17,8 +17,8 @@
 		 * The array of level factories.
 		 */
 		private static var levels: Array = [
-			createLevel1
-			/*createLevel2*/
+			createLevel1,
+			createLevel2
 		];
 
 		/**
@@ -71,7 +71,7 @@
 					e.game.switchState(new StateWin(playerData));
 				} else {
 					playerData.livesLeft = 3;
-					loadLevel(new MainLevel(++currentLevelIndex));
+					loadLevel(new MainLevel(currentLevelIndex));
 				}
 			}
 		}
